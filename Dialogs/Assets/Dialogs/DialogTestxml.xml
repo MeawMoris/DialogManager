@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+
+<ConversationInfo type="monologue/dialog/text" isGuiConversation="true/false">
+  <!--isGuiConversation represents whether the conversation happen on gui or in world-->
+
+  <participant Name="xxx" ImagePath="" />
+  
+</ConversationInfo>
+
+
+<!--participant-->
