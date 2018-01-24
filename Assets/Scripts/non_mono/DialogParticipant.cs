@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class DialogParticipant
+public class DialogParticipant:UnityEngine.Object
 {
+
+    public const string AnonymousName = "Anonymous";
+
 
 
     [SerializeField] public string _name;

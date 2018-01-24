@@ -5,19 +5,23 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class test : MonoBehaviour
 {
-    public List<Sprite> sprites;
-    public DialogParticipant info;
+    //public List<Sprite> sprites;
+    //public DialogParticipant info;
     // Use this for initialization
+    public DialogSettings settings;
+
+
+
     void Start () {
-        info.Sprites.Add(null);
-        info.Sprites.Add(null);
+/*        info.Sprites.Add(null);
+        info.Sprites.Add(null);*/
 
     }
 	
 	// Update is called once per frame
 	void Update ()
 	{
-	    sprites = info.Sprites;
+	   // sprites = info.Sprites;
 
 	}
 }

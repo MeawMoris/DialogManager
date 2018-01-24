@@ -117,10 +117,7 @@ public class ConversationManager
 
 public class ConversationViewerSettings
 {
-    public bool MultipleSimultaneousDialogs { get; set; }
-    public bool ShowParticipantImages { get; set; }
-    public bool ShowParticimantNames { get; set; }
-    public bool AutoPlay { get; set; }//todo Calculate Delay time bassed on text in slide
+
 
 }
 

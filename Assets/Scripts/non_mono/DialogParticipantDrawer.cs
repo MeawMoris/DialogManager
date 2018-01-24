@@ -35,7 +35,7 @@ public class DialogParticipantDrawer : PropertyDrawer
         var nameProperty = property.FindPropertyRelative("_name");
 
         if (string.IsNullOrEmpty(nameProperty.stringValue))
-            nameProperty.stringValue = "NULL";//todo search if name is used or not
+            nameProperty.stringValue = DialogParticipant.AnonymousName;//todo search if name is used or not
 
         nameProperty.stringValue= EditorGUI.TextField(pos, nameProperty.displayName, nameProperty.stringValue);
       

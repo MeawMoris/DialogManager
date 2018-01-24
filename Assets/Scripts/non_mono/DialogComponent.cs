@@ -1,86 +1,74 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 
-public class DialogComponent:MonoBehaviour
+public class DialogComponent : MonoBehaviour
 {
-    [SerializeField]
-    private TextAsset _xmlDialogFile;
+    // [SerializeField]
+    // private TextAsset _xmlDialogFile;
 
-    [SerializeField]
-    private DialogEntry _info;
+    // [SerializeField]
+    //private Dialog _info;
 
-  //  public image
+    //  public image
     void Update()
     {
-        
-    }
-
-
-
-
-
-}
-
-public class DialogEntry
-{
-    [SerializeField][ParticipantSelector] private IList<DialogParticipant> _participants;
-
-}
-
-public class ParticipantSelector : PropertyAttribute
-{
-    public ParticipantSelector()
-    {
-        
     }
 }
 
-
-
-
-
-public class DialogManagerWindow : EditorWindow
+public class Dialog
 {
+    [SerializeField] protected DialogSettings settings;
+    [SerializeField] [ParticipantSelector] protected List<DialogParticipant> _participants;
+    [SerializeField] protected List<DialogEntry> _dialogEntries;
 
-    [MenuItem("Tools/Clear PlayerPrefs")]
-    static void ViewWindow()
+
+    //dialog view window:
+    /*
+     * --add participants
+     * --participants image settings
+     * --dialog entries 
+     */
+}
+
+
+public class blabla
+{
+    public enum ParticipantPosition
     {
-        GetWindow<DialogManagerWindow>().Show();
+        Auto,
+        Left,
+        Right,
+    }
+    [SerializeField] private ParticipantPosition _participantImagesPos;
+    [SerializeField] private int _participantSpriteIndex;
+
+
+    public ParticipantPosition ParicipantImagesPos
+    {
+        get { return _participantImagesPos; }
+        set { _participantImagesPos = value; }
+    }
+    public int ParticipantSpriteIndex
+    {
+        get { return _participantSpriteIndex; }
+        set { _participantSpriteIndex = value; }
     }
 
+}
 
-    private bool foldout_participants;
 
-    private void OnEnable()
+
+
+
+
+
+
+public class ParticipantSelectorAttribute : PropertyAttribute
+{
+//todo to implement class
+    public ParticipantSelectorAttribute()
     {
-
     }
-
-    private void OnGUI()
-    {
-        var rect =EditorGUIUtility.ScreenToGUIRect( this.position);
-        Debug.Log(rect);
-        var rect2 = rect;
-        rect2.height *= .5f;
-        rect2.x = rect2.y = 0;
-
-        EditorGUILayout.("participants", foldout_participants);
-
-        EditorGUILayout.TextField("test", "");
-        EditorGUILayout.TextField("test", "");
-        EditorGUILayout.TextField("test", "");
-        EditorGUILayout.TextField("test", "");
-
-        EditorGUILayout.EndToggleGroup();
-
-
-        foldout_participants = EditorGUILayout.Foldout(foldout_participants, new GUIContent("participants"));
-
-    }
-
-
 }
