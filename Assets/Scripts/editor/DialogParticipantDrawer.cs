@@ -18,6 +18,7 @@ public class DialogParticipantDrawer : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+
         //base.OnGUI(position, property, label);
         var pos = position;
 
@@ -35,7 +36,7 @@ public class DialogParticipantDrawer : PropertyDrawer
         var nameProperty = property.FindPropertyRelative("_name");
 
         if (string.IsNullOrEmpty(nameProperty.stringValue))
-            nameProperty.stringValue = DialogParticipant.AnonymousName;//todo search if name is used or not
+            nameProperty.stringValue = DialogManager.GetInstance().AnonymousParticipant.Name;//todo search if name is used or not
 
         nameProperty.stringValue= EditorGUI.TextField(pos, nameProperty.displayName, nameProperty.stringValue);
       
@@ -44,6 +45,7 @@ public class DialogParticipantDrawer : PropertyDrawer
         pos.height = spritesListViewer.GetHeight() + EditorGUIUtility.singleLineHeight * 2;
         totalHeight += pos.height;
 
+        RemoveDuplicates(property);
         DragSpritesToList(property,pos);
         spritesListViewer.DoList(pos);
 
@@ -53,21 +55,15 @@ public class DialogParticipantDrawer : PropertyDrawer
         pos.height = EditorGUIUtility.singleLineHeight;
         totalHeight += pos.height;
 
+
         //  pos.y += position.y+pos.height;
         var defaultSpriteProperty = property.FindPropertyRelative("_defaultSprite");
 
-        if (_selectedPopupIndex >= 0)
-            defaultSpriteProperty.objectReferenceValue =
-                property.FindPropertyRelative("_sprites").GetArrayElementAtIndex(_selectedPopupIndex)
-                    .objectReferenceValue;
-        else
-            defaultSpriteProperty.objectReferenceValue = null;
+        _popupNames= EditorParticipantsUtility.GetParticipantSpriteNames(property);
 
-        _selectedPopupIndex = EditorGUI.Popup(pos, defaultSpriteProperty.displayName, _selectedPopupIndex, _popupNames.ToArray());
-
-
-
-
+        var temp= EditorGUI.Popup(pos, defaultSpriteProperty.displayName, _selectedPopupIndex, _popupNames.ToArray());
+        if (temp != _selectedPopupIndex)
+            SetPopupValue(property, temp);
     }
 
 
@@ -88,15 +84,7 @@ public class DialogParticipantDrawer : PropertyDrawer
             };
 
 
-        spritesListViewer.onChangedCallback= list => {
-            SetPopupSuggestions(property);
-            RemoveDuplicates(property);
-        };
-        spritesListViewer.onChangedCallback = x =>
-        {
-            SetPopupSuggestions(property);
-            RemoveDuplicates(property);
-        };
+   
         spritesListViewer.onAddCallback = x =>
         {
             listt.InsertArrayElementAtIndex(listt.arraySize);
@@ -109,11 +97,9 @@ public class DialogParticipantDrawer : PropertyDrawer
         {
             listt.GetArrayElementAtIndex(list.index).objectReferenceValue=null;
             listt.DeleteArrayElementAtIndex(list.index);
-            SetPopupSuggestions(property);
 
         };
 
-        SetPopupSuggestions(property);
     }
 
 
@@ -142,17 +128,13 @@ public class DialogParticipantDrawer : PropertyDrawer
                     {
                         InsertElement(property, dragged_object);
 
-                        Debug.Log(dragged_object + " " + dragged_object.GetType().Name);
-                        // Do On Drag Stuff here
                     }
-
                     RemoveDuplicates(property);
-                    SetPopupSuggestions(property);
+                    
                 }
                 break;
         }
     }
-
     private void InsertElement(SerializedProperty property, Sprite dragged_object)
     {
         var listt = property.FindPropertyRelative("_sprites");
@@ -160,7 +142,6 @@ public class DialogParticipantDrawer : PropertyDrawer
         listt.InsertArrayElementAtIndex(count);
         listt.GetArrayElementAtIndex(count).objectReferenceValue = dragged_object;
     }
-
     private void RemoveDuplicates(SerializedProperty property)
     {
         var listt = property.FindPropertyRelative("_sprites");
@@ -189,21 +170,28 @@ public class DialogParticipantDrawer : PropertyDrawer
 
     }
 
-    private void SetPopupSuggestions(SerializedProperty property)
+
+    private void SetPopupValue(SerializedProperty property, int oldIndex)
+    {
+        if (oldIndex == _selectedPopupIndex)
+            return;
+
+        var listt = property.FindPropertyRelative("_sprites");
+        var sprite = listt.GetArrayElementAtIndex(oldIndex).objectReferenceValue as Sprite;
+        property.FindPropertyRelative("_defaultSprite").objectReferenceValue=sprite;
+    }
+    private void SetPopupValue_OnSpritesModified(SerializedProperty property)
     {
         var listt = property.FindPropertyRelative("_sprites");
         var defaultSprite = property.FindPropertyRelative("_defaultSprite");
         var count = listt.arraySize;
-        _popupNames.Clear();
 
         bool found = false;
         for (int i = 0; i < count; i++)
         {
             var sprite = listt.GetArrayElementAtIndex(i).objectReferenceValue as Sprite;
-            if(sprite!=null)
-                _popupNames.Add(sprite.name);
-
-            if (defaultSprite.objectReferenceValue == sprite)
+          
+            if (!found && defaultSprite.objectReferenceValue == sprite)
             {
                 found = true;
                 defaultSprite.objectReferenceValue = sprite;

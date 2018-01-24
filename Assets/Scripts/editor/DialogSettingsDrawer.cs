@@ -19,7 +19,7 @@ public class DialogSettingsDrawer : PropertyDrawer
         height = EditorGUIUtility.singleLineHeight;
         //--------------------------------------------------------------------------------------------------------
 
-        foldoutValue = EditorGUI.Foldout(rect,foldoutValue, "Dialog Settings");
+        foldoutValue = EditorGUI.Foldout(rect,foldoutValue, property.displayName);
 
         if (foldoutValue)
         {
@@ -69,6 +69,8 @@ public class DialogSettingsDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return  height;
+        if(foldoutValue)
+            return EditorGUIUtility.singleLineHeight*5;
+        return EditorGUIUtility.singleLineHeight;
     }
 }

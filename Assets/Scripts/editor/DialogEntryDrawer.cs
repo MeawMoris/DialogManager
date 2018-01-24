@@ -22,11 +22,17 @@ public class DialogEntryDrawer : PropertyDrawer
         for (int i = 0; i < _participants.arraySize; i++)
         {
             var objectReferenceValue =
-                _participants.GetArrayElementAtIndex(i).objectReferenceValue as DialogParticipant;
-            participantPopupNames.Add(objectReferenceValue.Name);
+                _participants.GetArrayElementAtIndex(i).FindPropertyRelative("_name");
+            participantPopupNames.Add(objectReferenceValue.stringValue);
         }
 
+
+        //show label
+        EditorGUI.LabelField(rect,property.displayName);
+
+
         //show Participants popup
+        rect.y += rect.height;
         _selectedParticipantIndex.intValue =
             EditorGUI.Popup(rect, "Participant", _selectedParticipantIndex.intValue, participantPopupNames.ToArray());
 
@@ -38,6 +44,6 @@ public class DialogEntryDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return base.GetPropertyHeight(property, label) + EditorGUIUtility.singleLineHeight * 6;
+        return base.GetPropertyHeight(property, label) + EditorGUIUtility.singleLineHeight * 7;
     }
 }

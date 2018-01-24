@@ -11,7 +11,6 @@ public class DialogInfo {
 
     //fields------------------------------------------------------
     private readonly List<DialogParticipant> _participants;
-
     //properties--------------------------------------------------
     public List<DialogParticipant> Participants
     {
@@ -23,7 +22,7 @@ public class DialogInfo {
     //ctors-------------------------------------------------------
     public DialogInfo()
     {
-        _participants = new List<DialogParticipant>();
+       // _participants = new List<DialogParticipant>();
     }
 
     //methods-----------------------------------------------------

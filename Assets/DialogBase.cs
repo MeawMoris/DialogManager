@@ -8,7 +8,7 @@ public class DialogBase : MonoBehaviour
 
     private void Start()
     {
-        ConversationManager c = new ConversationManager();
+        //ConversationManager c = new ConversationManager();
         // c.StartDialog()
     }
 
@@ -55,60 +55,6 @@ public class text_ConversationViewer : ConversationViewer { }
 //----------------------------------------------------------------------------------
 
 //static singleton class
-public class ConversationManager
-{
-    private static ConversationManager _cManager;
-    public static ConversationManager GetInstance(ConversationViewer viewer)
-    {
-        if (_cManager == null)
-            _cManager = new ConversationManager();
-        return _cManager.Initialize(viewer);
-    }
-
-
-    public ConversationManager()
-    {
-
-    }
-    public ConversationManager Initialize(ConversationViewer viewer)
-    {
-
-
-        return this;
-    }
-
-
-
-    /// <summary>
-    /// starts a dialog if none is stated.
-    /// 
-    /// returns false id another dialog is taking place and "multi-dialog" feature is disabled
-    ///  or if dialogs are disabled.
-    /// </summary>
-    /// <returns>returns true if the dialog started, otherwise returns false</returns>
-    public bool StartDialog()
-    {
-        //todo recieve dialogData
-        //todo return false if a multi dialog is displaying
-        //todo show multiple dialogs if the feature is enabled
-        return false;
-    }
-
-
-
-
-    //todo implement events invokers 
-    //todo invoke events at the right moment
-    public event EventHandler OnDialogStart;
-    public event EventHandler OnDialogEnd;
-    public event EventHandler OnSlideChange;
-    public bool IsDialogRunnig { get; private set; }
-
-
-
-
-
-}
 
 //----------------------------------------------------------------------------------
 

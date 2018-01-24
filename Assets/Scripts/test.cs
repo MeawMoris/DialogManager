@@ -8,14 +8,16 @@ public class test : MonoBehaviour
     //public List<Sprite> sprites;
     //public DialogParticipant info;
     // Use this for initialization
-    public DialogSettings settings;
+    public Dialog settings;
+    public DialogParticipantImageSettings settings2;
 
+
+        
 
 
     void Start () {
-/*        info.Sprites.Add(null);
-        info.Sprites.Add(null);*/
-
+        /*        info.Sprites.Add(null);
+                info.Sprites.Add(null);*/
     }
 	
 	// Update is called once per frame

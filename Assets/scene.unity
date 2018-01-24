@@ -436,27 +436,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c8813274a0c0f429c86f39de0b144e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300012, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300000, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300002, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300006, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300008, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300016, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 21300018, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-  - {fileID: 0}
-  info:
-    _name: '**name'
-    _sprites:
-    - {fileID: 21300012, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300000, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300002, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300006, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300008, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300016, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 21300018, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
-    - {fileID: 0}
-    _defaultSprite: {fileID: 21300000, guid: 28b41fef228d6814f90e541deaf9f262, type: 3}
+  settings:
+    _dialogSettings:
+      _multipleSimultaneousDialogs: 0
+      _showParticimantNames: 0
+      _showParticipantImages: 0
+      _autoPlay: 0
+    _participantSelectors:
+      _selectors:
+      - _selectedItemName: anonymous
+      - _selectedItemName: Alex
+    _participantsImageSettings: []
+    _dialogEntries: []
+  settings2:
+    ParticipantName: 
+    _participantImagesPos: 0
+    _participantSpriteIndex: 2
 --- !u!4 &1387860206
 Transform:
   m_ObjectHideFlags: 0

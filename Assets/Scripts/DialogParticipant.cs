@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class DialogParticipant:UnityEngine.Object
+public class DialogParticipant
 {
 
-    public const string AnonymousName = "Anonymous";
+
 
 
 
     [SerializeField] public string _name;
     [SerializeField] public List<Sprite> _sprites = new List<Sprite>();
     [SerializeField] public Sprite _defaultSprite;
+
+
 
     public string Name
     {
@@ -31,8 +33,4 @@ public class DialogParticipant:UnityEngine.Object
     }
 
 
-
-
 }
-
-

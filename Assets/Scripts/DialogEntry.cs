@@ -21,8 +21,9 @@ public class DialogEntry
 
     [SerializeField] private List<DialogParticipant> _participants;
     [SerializeField] private int _selectedParticipantIndex;
+    [SerializeField] private int _participantImageIndex;
     [SerializeField] private string _text;
-
+    //todo add Participant sprite field
 
     public DialogEntry(List<DialogParticipant> participants)
     {
