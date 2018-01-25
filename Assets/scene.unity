@@ -443,15 +443,21 @@ MonoBehaviour:
       _showParticipantImages: 0
       _autoPlay: 0
     _participantSelectors:
-      _selectors:
-      - _selectedItemName: anonymous
-      - _selectedItemName: Alex
+      _participantNames:
+      - participantName: Yoav
+        participantPopupIndex: 2
+      - participantName: Yoav
+        participantPopupIndex: 2
+      - participantName: Alex
+        participantPopupIndex: 3
+      - participantName: Alex
+        participantPopupIndex: 3
     _participantsImageSettings: []
     _dialogEntries: []
   settings2:
     ParticipantName: 
     _participantImagesPos: 0
-    _participantSpriteIndex: 2
+    _participantSpriteIndex: 0
 --- !u!4 &1387860206
 Transform:
   m_ObjectHideFlags: 0

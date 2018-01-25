@@ -33,12 +33,13 @@ public class DialogManager
         //todo to implement
         //todo return a list of all participant including the anonymous one
         return new List<DialogParticipant>(){ AnonymousParticipant 
-            ,new DialogParticipant(){Name = "Alex"}
             ,new DialogParticipant(){Name = "meaw"}
-            ,new DialogParticipant(){Name = "Yoav"}           
+            ,new DialogParticipant(){Name = "Yoav"}   
+            ,new DialogParticipant(){Name = "Alex"}
+
         };
 
-       // return null;
+        // return null;
     }
     public DialogParticipant AnonymousParticipant
     {

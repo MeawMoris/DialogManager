@@ -1,66 +1,83 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public struct ParticipantSelectorList:IList<ParticipantSelector>
+struct ParticipantSelectorInfo
 {
-    [SerializeField] private List<ParticipantSelector> _selectors;
+    [SerializeField] string participantName;
+    [SerializeField] int participantPopupIndex;
 
-
-
-    public IEnumerator<ParticipantSelector> GetEnumerator()
+    public string ParticipantName
     {
-        return _selectors.GetEnumerator();
+        get { return participantName; }
+    }
+}
+
+[Serializable]
+public class ParticipantSelectorList:IList<string>
+{
+    [SerializeField] private List<ParticipantSelectorInfo> _participantNames;
+
+    List<string> GetNameList()
+    {
+        return _participantNames.Select(x => x.ParticipantName).ToList();
+    }
+
+
+    public IEnumerator<string> GetEnumerator()
+    {
+        return GetNameList().GetEnumerator();
     }
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable) _selectors).GetEnumerator();
+        return ((IEnumerable)GetNameList()).GetEnumerator();
     }
-    public void Add(ParticipantSelector item)
+    public void Add(string item)
     {
-        _selectors.Add(item);
+        GetNameList().Add(item);
     }
     public void Clear()
     {
-        _selectors.Clear();
+        GetNameList().Clear();
     }
-    public bool Contains(ParticipantSelector item)
+    public bool Contains(string item)
     {
-        return _selectors.Contains(item);
+        return GetNameList().Contains(item);
     }
-    public void CopyTo(ParticipantSelector[] array, int arrayIndex)
+    public void CopyTo(string[] array, int arrayIndex)
     {
-        _selectors.CopyTo(array, arrayIndex);
+        GetNameList().CopyTo(array, arrayIndex);
     }
-    public bool Remove(ParticipantSelector item)
+    public bool Remove(string item)
     {
-        return _selectors.Remove(item);
+        return GetNameList().Remove(item);
     }
     public int Count
     {
-        get { return _selectors.Count; }
+        get { return GetNameList().Count; }
     }
     public bool IsReadOnly
     {
         get { return false; }
     }
-    public int IndexOf(ParticipantSelector item)
+    public int IndexOf(string item)
     {
-        return _selectors.IndexOf(item);
+        return GetNameList().IndexOf(item);
     }
-    public void Insert(int index, ParticipantSelector item)
+    public void Insert(int index, string item)
     {
-        _selectors.Insert(index, item);
+        GetNameList().Insert(index, item);
     }
     public void RemoveAt(int index)
     {
-        _selectors.RemoveAt(index);
+        GetNameList().RemoveAt(index);
     }
-    public ParticipantSelector this[int index]
+    public string this[int index]
     {
-        get { return _selectors[index]; }
-        set { _selectors[index] = value; }
+        get { return GetNameList()[index]; }
+        set { GetNameList()[index] = value; }
     }
 }

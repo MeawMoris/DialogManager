@@ -12,7 +12,6 @@ public class DialogParticipantDrawer : PropertyDrawer
     private float totalHeight;
     private ReorderableList spritesListViewer;
     private List<string> _popupNames = new List<string>();
-    int _selectedPopupIndex = -1;
 
 
 
@@ -57,13 +56,12 @@ public class DialogParticipantDrawer : PropertyDrawer
 
 
         //  pos.y += position.y+pos.height;
-        var defaultSpriteProperty = property.FindPropertyRelative("_defaultSprite");
+        var defaultSpriteIndexProperty = property.FindPropertyRelative("_defaultSpriteIndex");
 
         _popupNames= EditorParticipantsUtility.GetParticipantSpriteNames(property);
 
-        var temp= EditorGUI.Popup(pos, defaultSpriteProperty.displayName, _selectedPopupIndex, _popupNames.ToArray());
-        if (temp != _selectedPopupIndex)
-            SetPopupValue(property, temp);
+        defaultSpriteIndexProperty.intValue = EditorGUI.Popup(pos, "Default Sprite", defaultSpriteIndexProperty.intValue, _popupNames.ToArray());
+
     }
 
 
@@ -171,43 +169,7 @@ public class DialogParticipantDrawer : PropertyDrawer
     }
 
 
-    private void SetPopupValue(SerializedProperty property, int oldIndex)
-    {
-        if (oldIndex == _selectedPopupIndex)
-            return;
-
-        var listt = property.FindPropertyRelative("_sprites");
-        var sprite = listt.GetArrayElementAtIndex(oldIndex).objectReferenceValue as Sprite;
-        property.FindPropertyRelative("_defaultSprite").objectReferenceValue=sprite;
-    }
-    private void SetPopupValue_OnSpritesModified(SerializedProperty property)
-    {
-        var listt = property.FindPropertyRelative("_sprites");
-        var defaultSprite = property.FindPropertyRelative("_defaultSprite");
-        var count = listt.arraySize;
-
-        bool found = false;
-        for (int i = 0; i < count; i++)
-        {
-            var sprite = listt.GetArrayElementAtIndex(i).objectReferenceValue as Sprite;
-          
-            if (!found && defaultSprite.objectReferenceValue == sprite)
-            {
-                found = true;
-                defaultSprite.objectReferenceValue = sprite;
-                _selectedPopupIndex = i;
-            }
-
-        }
-        if (!found)
-        {
-            defaultSprite.objectReferenceValue = null;
-            _selectedPopupIndex = -1;
-        }
-
-    }
-
-
+  
 
 
 

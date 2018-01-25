@@ -10,9 +10,9 @@ public class DialogParticipant
 
 
 
-    [SerializeField] public string _name;
-    [SerializeField] public List<Sprite> _sprites = new List<Sprite>();
-    [SerializeField] public Sprite _defaultSprite;
+    [SerializeField]  string _name;
+    [SerializeField]  List<Sprite> _sprites = new List<Sprite>();
+    [SerializeField]  int _defaultSpriteIndex;
 
 
 
@@ -28,9 +28,28 @@ public class DialogParticipant
     }
     public Sprite DefaultSprite
     {
-        get { return _defaultSprite; }
-        set { _defaultSprite = value; }
+        get
+        {
+            if (_sprites.Count == 0)
+                return null;
+            if (_defaultSpriteIndex >= _sprites.Count)
+                _defaultSpriteIndex = 0;
+
+            return _sprites[DefaultSpriteIndex];
+        }
     }
-
-
+    public int DefaultSpriteIndex
+    {
+        get
+        {
+            if (_sprites.Count == 0)
+                _defaultSpriteIndex = -1;
+            return _defaultSpriteIndex;
+        }
+        set
+        {
+            if(value>=0 && value<_sprites.Count)
+                _defaultSpriteIndex = value;
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class test : MonoBehaviour
     //public DialogParticipant info;
     // Use this for initialization
     public Dialog settings;
-    public DialogParticipantImageSettings settings2;
+   // public DialogParticipantImageSettings settings2;
 
 
         
