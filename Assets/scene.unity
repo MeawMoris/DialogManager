@@ -446,18 +446,26 @@ MonoBehaviour:
       _participantNames:
       - participantName: Yoav
         participantPopupIndex: 2
-      - participantName: Yoav
-        participantPopupIndex: 2
+      - participantName: anonymous
+        participantPopupIndex: 0
       - participantName: Alex
         participantPopupIndex: 3
-      - participantName: Alex
-        participantPopupIndex: 3
-    _participantsImageSettings: []
+    _participantsImageSettings:
+      _data:
+      - _participantName: Yoav
+        _imagePosition: 0
+        _participantSelectedSpriteIndex: -1
+      - _participantName: anonymous
+        _imagePosition: 0
+        _participantSelectedSpriteIndex: -1
+      - _participantName: Alex
+        _imagePosition: 0
+        _participantSelectedSpriteIndex: -1
+      _participantNamesList:
+      - Yoav
+      - anonymous
+      - Alex
     _dialogEntries: []
-  settings2:
-    ParticipantName: 
-    _participantImagesPos: 0
-    _participantSpriteIndex: 0
 --- !u!4 &1387860206
 Transform:
   m_ObjectHideFlags: 0
