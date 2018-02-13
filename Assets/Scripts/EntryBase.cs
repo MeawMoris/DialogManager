@@ -121,18 +121,20 @@ public class EntryWindow : EditorWindow
             _componentsListadapter = new EntryComponentListAdaptor<EntryComponent>(_conversaton.Componets, OnAddComponentClick, ComponentItemDrawer );
 
         _componentsListControl.Draw(_componentsListadapter);
-        
+
     }
 
 
     private EntryComponent ComponentItemDrawer(Rect position, EntryComponent item)
     {
-        item.Draw(position); return item;
+        item.DrawView(position);
+        this.Repaint();
+        return item;
     }
     private void OnAddComponentClick(GenericMenu genericMenu, IList<EntryComponent> list)
     {
         //todo show needed types
-        //todo set select type window popup filters
+        //todo set select type window pop up filters
 
         //base type
         Type abstractType = typeof(EntryComponent);
