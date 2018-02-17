@@ -5,7 +5,6 @@ using System.Reflection;
 #if UNITY_EDITOR
 using UnityEditor;
 using Rotorz.ReorderableList;
-
 #endif
 using UnityEngine;
 
@@ -46,14 +45,7 @@ public partial class Entry :EntryBase
 
     //editor methods-------------------------------------------------------------------------------------
 
-    //---------------------------------------------------------------------------------------------------
-}
-
-
-
 #if UNITY_EDITOR
-public partial class Entry
-{
 
     public virtual EntryWindow GetNewWindow()
     {
@@ -68,8 +60,10 @@ public partial class Entry
         return window; // todo to implement
     }
 
-}
 #endif
+    //---------------------------------------------------------------------------------------------------
+}
+
 
 
 
@@ -102,7 +96,7 @@ public class EntryWindow : EditorWindow
     //UI window variables-----------------------------------------------------------
     private EntryComponentListAdaptor<EntryComponent> _componentsListadapter;
     private ReorderableListControl _componentsListControl;
-
+    private GenericMenu genericMenu;
     //messages----------------------------------------------------------------------
 
 
@@ -118,7 +112,7 @@ public class EntryWindow : EditorWindow
             _componentsListControl = new ReorderableListControl();
 
         if (_componentsListadapter == null)
-            _componentsListadapter = new EntryComponentListAdaptor<EntryComponent>(_conversaton.Componets, OnAddComponentClick, ComponentItemDrawer );
+            _componentsListadapter = new EntryComponentListAdaptor<EntryComponent>(_conversaton.Componets,ComponentItemDrawer, OnAddComponentClick );
 
         _componentsListControl.Draw(_componentsListadapter);
 
@@ -127,27 +121,35 @@ public class EntryWindow : EditorWindow
 
     private EntryComponent ComponentItemDrawer(Rect position, EntryComponent item)
     {
-        item.DrawView(position);
+        item.DrawView(ref position);
         this.Repaint();
         return item;
     }
-    private void OnAddComponentClick(GenericMenu genericMenu, IList<EntryComponent> list)
+    private void OnAddComponentClick(IList<EntryComponent> list)
     {
         //todo show needed types
         //todo set select type window pop up filters
+        if (genericMenu == null)
+        {
+            genericMenu = new GenericMenu();
 
-        //base type
-        Type abstractType = typeof(EntryComponent);
 
-        //get all sub types
-        var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
-            where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t) select t).ToList();
+            //base type
+            Type abstractType = typeof(EntryComponent);
 
-        //set contexts menu options and OnItemSelect
-        foreach (var componentType in componentTypes)      
-            genericMenu.AddItem(new GUIContent(componentType.Name),false,()=> list.Add(EntryComponent.CreateInstance(componentType)) );
-        
-        
+            //get all sub types
+            var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
+                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
+                select t).ToList();
+
+            //set contexts menu options and OnItemSelect
+            foreach (var componentType in componentTypes)
+                genericMenu.AddItem(new GUIContent(componentType.Name.Split('_')[1]), false,
+                    () => list.Add(EntryComponent.CreateInstance(componentType)));
+        }
+
+        genericMenu.ShowAsContext();
+
     }
 
 

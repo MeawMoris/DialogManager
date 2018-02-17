@@ -1,0 +1,472 @@
+<Project>
+  <Name>DialogManager</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>DialogParticipant</Name>
+        <Access>Public</Access>
+        <Location left="938" top="736" />
+        <Size width="162" height="109" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DialogEntry</Name>
+        <Access>Public</Access>
+        <Location left="1179" top="736" />
+        <Size width="162" height="112" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Structure">
+        <Name>DialogSettings</Name>
+        <Access>Public</Access>
+        <Location left="1415" top="739" />
+        <Size width="162" height="112" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>Dialog</Name>
+        <Access>Public</Access>
+        <Location left="1179" top="531" />
+        <Size width="162" height="103" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DialogSelectorAttribute</Name>
+        <Access>Public</Access>
+        <Location left="1853" top="631" />
+        <Size width="216" height="103" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ParticipantSelectorAttribute</Name>
+        <Access>Public</Access>
+        <Location left="1853" top="763" />
+        <Size width="216" height="103" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DialogComponent</Name>
+        <Access>Public</Access>
+        <Location left="1853" top="398" />
+        <Size width="216" height="103" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DialogManagerWindow</Name>
+        <Access>Public</Access>
+        <Location left="1853" top="190" />
+        <Size width="211" height="103" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>lets you chose between the existing dialogs from the Editor.
+
+references a dialogViewer
+starts the conversation
+</Text>
+        <Location left="2130" top="398" />
+        <Size width="160" height="123" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>lets you chose between the existing dialogs from the Editor.
+
+
+</Text>
+        <Location left="2130" top="631" />
+        <Size width="160" height="89" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>lets you chose between the existing participant 
+from the Editor.
+
+
+</Text>
+        <Location left="2130" top="763" />
+        <Size width="160" height="89" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>add/remove participant.
+add/remove dialogs.
+export/import the data to an asset.
+</Text>
+        <Location left="2130" top="201" />
+        <Size width="209" height="80" />
+      </Entity>
+      <Entity type="Class">
+        <Name>DialogViewer</Name>
+        <Access>Public</Access>
+        <Location left="657" top="516" />
+        <Size width="162" height="99" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1283</X>
+          <Y>659</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2105</X>
+          <Y>450</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="10" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="9" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="11" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="1" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1144</X>
+          <Y>797</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>compenent idea</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>ConversationBase</Name>
+        <Access>Public</Access>
+        <Location left="2174" top="415" />
+        <Size width="162" height="106" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>the type of conversation that is needed (such as: main dialog, items info, quest, etc...)</Text>
+        <Location left="2426" top="415" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>ComponentsEntry</Name>
+        <Access>Public</Access>
+        <Location left="2002" top="1187" />
+        <Size width="180" height="116" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponentBase</Name>
+        <Access>Public</Access>
+        <Location left="1400" top="1286" />
+        <Size width="407" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private string _name</Member>
+        <Member type="Field">bool _isInEditMode</Member>
+        <Member type="Property">public bool isInEditMode { get; set; }</Member>
+        <Member type="Property">public string Name { get; set; }</Member>
+        <Member type="Constructor">public EntryComponentBase(ConversationEntryBase container, string componentName)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_Collection</Name>
+        <Access>Public</Access>
+        <Location left="1284" top="1882" />
+        <Size width="276" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_CollectionSelector</Name>
+        <Access>Public</Access>
+        <Location left="1257" top="1818" />
+        <Size width="304" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>template design pattern to create a couple of intial types</Text>
+        <Location left="1799" top="1159" />
+        <Size width="133" height="63" />
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_ObjectField</Name>
+        <Access>Public</Access>
+        <Location left="1274" top="1521" />
+        <Size width="276" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryBase</Name>
+        <Access>Public</Access>
+        <Location left="2118" top="996" />
+        <Size width="225" height="94" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SequenceEntry</Name>
+        <Access>Public</Access>
+        <Location left="2355" top="1188" />
+        <Size width="321" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public bool IsBranch { get; set; }</Member>
+        <Member type="Property">public List&lt;ConversationEntryBase&gt; Entries { get; set; }</Member>
+        <Member type="Property">public ConversationEntryBase SequenceType { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MethodTriggerer</Name>
+        <Access>Public</Access>
+        <Location left="2741" top="1188" />
+        <Size width="180" height="116" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryBranchData</Name>
+        <Access>Public</Access>
+        <Location left="2518" top="1417" />
+        <Size width="162" height="85" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ConversationTriggerer</Name>
+        <Access>Public</Access>
+        <Location left="2938" top="1188" />
+        <Size width="180" height="116" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ConversationStarter</Name>
+        <Access>Public</Access>
+        <Location left="3143" top="1188" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Viewer</Name>
+        <Access>Public</Access>
+        <Location left="2490" top="523" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_UnityObjectField</Name>
+        <Access>Public</Access>
+        <Location left="874" top="1686" />
+        <Size width="247" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_EnumField</Name>
+        <Access>Public</Access>
+        <Location left="1135" top="1686" />
+        <Size width="211" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_BasicField</Name>
+        <Access>Public</Access>
+        <Location left="652" top="1686" />
+        <Size width="212" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>int/float/double/string/char/vectors</Text>
+        <Location left="412" top="1711" />
+        <Size width="222" height="50" />
+      </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_CustomDataField</Name>
+        <Access>Public</Access>
+        <Location left="1257" top="1944" />
+        <Size width="304" height="78" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CatagoryBase</Name>
+        <Access>Public</Access>
+        <Location left="2092" top="563" />
+        <Size width="263" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SequenceConversation</Name>
+        <Access>Public</Access>
+        <Location left="1901" top="666" />
+        <Size width="162" height="112" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>StructDataEntry</Name>
+        <Access>Public</Access>
+        <Location left="2100" top="1556" />
+        <Size width="262" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">List&lt;EntryComponent_BasicField&gt; components</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ClassDataEntry</Name>
+        <Access>Public</Access>
+        <Location left="1824" top="1556" />
+        <Size width="262" height="94" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DataEntry</Name>
+        <Access>Public</Access>
+        <Location left="2019" top="1442" />
+        <Size width="162" height="78" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Comment" first="1" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="2" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartRole>OrderableList</StartRole>
+        <StartMultiplicity>1..*</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="6" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="10" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="9" second="11">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartRole>list</StartRole>
+        <StartMultiplicity>1..*</StartMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="12" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="15" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="17" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="16" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="17">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="19" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="22" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="23" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="24" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

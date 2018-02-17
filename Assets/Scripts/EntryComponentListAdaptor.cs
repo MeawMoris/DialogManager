@@ -14,20 +14,13 @@ using UnityEditor;
 public class EntryComponentListAdaptor<t> : GenericListAdaptor<t>
     where t : EntryComponent
 {
+    private Action<IList<t>> _onAddButtonClick;
 
-    private readonly GenericMenu _addRightClickMenu;
-
-
-    public EntryComponentListAdaptor(IList<t> list,Action<GenericMenu, IList<t>> OnAddClick, ReorderableListControl.ItemDrawer<t> itemDrawer) 
-        : base(list, itemDrawer, ReorderableListGUI.DefaultItemHeight)
+    public EntryComponentListAdaptor(IList<t> list, ReorderableListControl.ItemDrawer<t> itemDrawer, Action<IList<t>> onAddButtonClick) : base(list, itemDrawer, ReorderableListGUI.DefaultItemHeight)
     {
-        if (OnAddClick != null)
-        {
-            _addRightClickMenu = new GenericMenu();
-            OnAddClick.Invoke(_addRightClickMenu,list);
-        }
-
+        _onAddButtonClick = onAddButtonClick;
     }
+
 
 
     t CreateInstance()
@@ -40,8 +33,8 @@ public class EntryComponentListAdaptor<t> : GenericListAdaptor<t>
     //list Methods------------------------------------------------------------------------
     public override void Add()
     {
-        if(_addRightClickMenu != null)
-            _addRightClickMenu.ShowAsContext();
+        if (_onAddButtonClick != null)
+            _onAddButtonClick.Invoke(List);
 
         else
             List.Add(CreateInstance());
@@ -66,10 +59,11 @@ public class EntryComponentListAdaptor<t> : GenericListAdaptor<t>
 
     public override float GetItemHeight(int index)
     {
-        return Math.Max(ReorderableListGUI.DefaultItemHeight ,List[index].GetPropertyHeight());
+        return Math.Max(ReorderableListGUI.DefaultItemHeight, List[index].GetPropertyHeight());
     }
 
     //------------------------------------------------------------------------------------
 
- 
+
+
 }
