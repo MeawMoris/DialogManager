@@ -27,6 +27,9 @@ public class test : MonoBehaviour
 	        editMode = !editMode;
             entry.GetVisableWindow().Conversaton.Componets.ForEach(x=>x.IsInEditMode = editMode);
 	    }
+        if(Input.GetKeyDown(KeyCode.A))
+            System.GC.Collect();
+
     }
 
     void initializeEntry()

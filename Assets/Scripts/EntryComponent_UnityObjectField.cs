@@ -14,7 +14,15 @@ public class EntryComponent_UnityObjectField : EntryComponent_SelectTypeBase
     public override object Value
     {
         get { return _value; }
-        set { _value = (UnityEngine.Object) value; }
+        set
+        {
+            if (OnViewModeModified != null && !_value.Equals(value))
+            {
+                _value = (UnityEngine.Object)value;
+                OnViewModeModified();
+            }
+           else  _value = (UnityEngine.Object) value;
+        }
     }
 
     public override List<Type> GetAvailableTypes()
@@ -30,6 +38,14 @@ public class EntryComponent_UnityObjectField : EntryComponent_SelectTypeBase
         return item;
     }
 
+    public override void CloneTo(EntryComponent other)
+    {
+        base.CloneTo(other);
+        var otherInst = other as EntryComponent_UnityObjectField;
+        if (otherInst == null)
+            throw new ArgumentException("types are not the same");
+        otherInst.Value = Value;
+    }
 
 #if UNITY_EDITOR
     protected override void DrawObjectField(ref Rect pos)
@@ -44,8 +60,12 @@ public class EntryComponent_UnityObjectField : EntryComponent_SelectTypeBase
 
     public override float GetPropertyHeight()
     {
-        if (!IsInEditMode && (SelectedType == typeof(Texture) || SelectedType == typeof(Sprite)))
-            return base.GetPropertyHeight() + SingleLineHeight * 3;
+        if(!IsInEditMode)
+            if (SelectedType == typeof(Texture) || SelectedType == typeof(Sprite))
+                return base.GetPropertyHeight() + SingleLineHeight * 3;
+        else if (SelectedType != null)
+                return base.GetPropertyHeight() + SingleLineHeight;
+
         return base.GetPropertyHeight();
     }
 #endif

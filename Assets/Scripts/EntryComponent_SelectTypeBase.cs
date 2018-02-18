@@ -79,13 +79,17 @@ public abstract class EntryComponent_SelectTypeBase : EntryComponent
     {
         get
         {
-
+            //check if a type is selected
             var selectedType = AvailableTypes.FirstOrDefault(x => selectedTypeName.Equals(x.FullName));
+
+            //if a type is selected
             if (selectedType != null)
             {
+                //if the type is not in the filtered list
                 var index = FilteredTypes.IndexOf(selectedType);
                 if (index == -1)
                 {
+                    //add the selected type to the filtered list
                     filteredTypes.Add(selectedType);
                     index = filteredTypes.Count - 1;
                 }
@@ -96,12 +100,16 @@ public abstract class EntryComponent_SelectTypeBase : EntryComponent
         }
         set
         {
+            bool tempChange = SelectedIndex != value;
+
             if (value < FilteredTypes.Count && value >= 0)
             {
                 selectedTypeName = FilteredTypes[value].FullName;
             }
             else selectedTypeName = "";
 
+            if(tempChange && OnEditModeModified!= null)
+                OnEditModeModified();
         }
     }
     public Type SelectedType
@@ -123,6 +131,7 @@ public abstract class EntryComponent_SelectTypeBase : EntryComponent
         //----------------------------------
         base.Initialize(componentName);        
         //----------------------------------
+        selectedTypeName = "";
         SelectedIndex = -1;
         //----------------------------------
     }
@@ -142,11 +151,20 @@ public abstract class EntryComponent_SelectTypeBase : EntryComponent
         return item;
     }
 
+    public override void CloneTo(EntryComponent other)
+    {
+        base.CloneTo(other);
+        var otherInst = other as EntryComponent_SelectTypeBase;
+        if (otherInst == null)
+            throw new ArgumentException("types are not the same");             
+        otherInst.selectedTypeName = selectedTypeName;
+         
+    }
 
     //methods-------------------------------------------------------------------------------------
     void UpdateFilteredList()
     {
-        FilteredTypes = AvailableTypes.Where(x => x.Name.ToLower().Contains(filterString??"")).ToList();
+        FilteredTypes = AvailableTypes.Where(x => x.Name.ToLower().Contains((filterString??"").ToLower())).ToList();
 
     }
 
@@ -156,11 +174,8 @@ public abstract class EntryComponent_SelectTypeBase : EntryComponent
 #if UNITY_EDITOR
     protected override void Draw(ref Rect pos)
     {
-        base.Draw(ref pos);
-        //pos.y += base.GetPropertyHeight();
+        
         pos.height = SingleLineHeight;
-
-
 
         var selectedType = AvailableTypes.FirstOrDefault(x => selectedTypeName.Equals(x.FullName));
 

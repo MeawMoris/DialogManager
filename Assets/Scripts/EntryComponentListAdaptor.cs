@@ -4,7 +4,7 @@ using Rotorz.ReorderableList;
 using UnityEditor;
 
 
-//todo put this class in the Editor folder
+
 
 
 /// <summary>

@@ -9,7 +9,7 @@ using UnityEngine;
 [Serializable]
 public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
 {
-    private static readonly string[] EnumTypeName = new string[]{ "Popup", "Flags" };
+    private static readonly string[] EnumTypeName = { "Popup", "Flags" };
 
     [SerializeField] private long _valueAsLong;
     [SerializeField] bool  _isFlags;
@@ -25,8 +25,16 @@ public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
         }
         set
         {
-            _valueAsLong = Convert.ToInt64((Enum)value);
-              
+            var newVal = Convert.ToInt64((Enum)value);
+
+            if (OnViewModeModified != null && _valueAsLong != newVal)
+            {
+                _valueAsLong = newVal;
+                OnViewModeModified();
+            }
+
+          else   _valueAsLong = newVal;
+
         }
     }
 
@@ -38,7 +46,6 @@ public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
             where (t.IsPublic || t.IsNestedPublic) && !(t.IsAbstract && t.IsSealed) && !t.IsGenericType && t.IsEnum && !t.IsClass
             select t).ToList();
     }
-
     public override object Clone()
     {
         var item = base.Clone() as EntryComponent_EnumField;
@@ -47,6 +54,17 @@ public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
         return item;
 
     }
+
+    public override void CloneTo(EntryComponent other)
+    {
+        base.CloneTo(other);
+        var otherInst = other as EntryComponent_EnumField;
+        if (otherInst == null)
+            throw new ArgumentException("types are not the same");
+        otherInst.Value = Value;
+        otherInst._isFlags = _isFlags;
+    }
+
 
 #if UNITY_EDITOR
     
@@ -82,7 +100,13 @@ public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
         if (SelectedType != null)
         {
             pos.height = SingleLineHeight;
-            _isFlags = EditorGUI.Popup(pos, "Field View Type", _isFlags ? 1 : 0, EnumTypeName) == 1;
+            var tempVal = EditorGUI.Popup(pos, "Field View Type", _isFlags ? 1 : 0, EnumTypeName) == 1;
+            if (tempVal != _isFlags)
+            {
+                if (OnEditModeModified != null)
+                    OnEditModeModified();
+                _isFlags = tempVal;
+            }
             pos.y += pos.height;
         }
     }

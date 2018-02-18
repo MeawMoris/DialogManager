@@ -17,12 +17,27 @@ public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
 
     public override object Value
     {
-        get { return fieldData.GetValue(SelectedType); }
-        set { fieldData.SetVal(value); }
+        get { return FieldData.GetValue(SelectedType); }
+        set
+        {
+            if (OnViewModeModified != null && !FieldData.GetValue(SelectedType).Equals(value))
+            {
+                FieldData.SetVal(value);
+                OnViewModeModified();
+                return;
+            }
+
+            FieldData.SetVal(value);
+        }
     }
     protected override bool ShowSearchField
     {
         get { return false; }
+    }
+
+    public BasicFieldData FieldData
+    {
+        get { return fieldData?? (fieldData = new BasicFieldData()); }
     }
 
 
@@ -35,20 +50,35 @@ public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
     {
         base.Initialize(componentName);
         fieldViewer = new BasicFieldViewer();
-        fieldData = new BasicFieldData();
     }
     public override object Clone()
     {
         EntryComponent_BasicField component = (EntryComponent_BasicField) base.Clone();
-        component.fieldData = new BasicFieldData(fieldData);
-        component.fieldViewer = new BasicFieldViewer(fieldViewer);
+        component.fieldData = new BasicFieldData(FieldData);
+        component.fieldViewer = new BasicFieldViewer(FieldViewer);
         return component;
     }
+    public override void CloneTo(EntryComponent other)
+    {
+        base.CloneTo(other);
+        var otherInst = other as EntryComponent_BasicField;
+        if (otherInst == null)
+            throw new ArgumentException("types are not the same");
+        otherInst.fieldData = new BasicFieldData(fieldData);
+        otherInst.fieldViewer = new BasicFieldViewer(fieldViewer);
+    }
+
+
 
 
 #if UNITY_EDITOR
     [SerializeField] private BasicFieldViewer fieldViewer;
     private float height;
+
+    public BasicFieldViewer FieldViewer
+    {
+        get { return fieldViewer?? (fieldViewer = new BasicFieldViewer()); }
+    }
 
 
     protected override void DrawObjectField(ref Rect pos)
@@ -56,7 +86,7 @@ public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
         var oldPos = pos.y;
 
         pos.height = SingleLineHeight;
-        Value= fieldViewer.DrawField(ref pos, FieldName, Value);
+        Value= FieldViewer.DrawField(ref pos, FieldName, Value);
 
         height = pos.y - oldPos ;
 
@@ -70,8 +100,8 @@ public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
         var oldPos = pos.y;
 
         pos.height = SingleLineHeight;
-        fieldViewer.DrawSelectFieldViewType(ref pos,SelectedType);
-        fieldViewer.DrawSelectedTypeSetup(ref pos);
+        FieldViewer.DrawSelectFieldViewType(ref pos,SelectedType,OnEditModeModified);
+        FieldViewer.DrawSelectedTypeSetup(ref pos, OnEditModeModified);
 
 
         height = pos.y - oldPos;
@@ -79,6 +109,7 @@ public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
 
 
     }
+
     public override float GetPropertyHeight()
     {
         return base.GetPropertyHeight() +height;
@@ -391,20 +422,23 @@ public class BasicFieldViewer
             throw new Exception("Please select the field view type in edit mode");
 
         pos.height = EntryComponent.SingleLineHeight;
+
         if (_selectedType.ToLower().Contains("vector"))
             pos.height *= 2;
+
         else if(_selectedType.Contains(TextAreaName))
             pos.height *= TextAreaLinesNum;
 
 
-        var temVal = this.FieldDrawer[_selectedType].Invoke(pos, fieldName, value);
+        var temVal = FieldDrawer[_selectedType].Invoke(pos, fieldName, value);
         pos.y += pos.height;
+
 
         return temVal;
 
     }
 
-    public void DrawSelectFieldViewType(ref Rect pos, Type t)
+    public void DrawSelectFieldViewType(ref Rect pos, Type t, Action onEditModified = null)
     {
         if (t == null) return;
 
@@ -412,38 +446,57 @@ public class BasicFieldViewer
             throw new ArgumentException("generic type is incomputable");
 
 
-
+        //get all the selected field view types
         var fieldDrawingTypes = this.FieldDrawer.Keys.Where(key => key.Contains(t.Name))
             .Select(key => key.Remove(0, key.IndexOf(' ') + 1))
             .ToArray();
+
+
 
         if (fieldDrawingTypes.Length > 0)
         {
             pos.height = EntryComponent.SingleLineHeight;
 
+            //if selected type is out of array range
             if (fieldDrawingTypes.Length <= _fieldDrawTypeIndex || _fieldDrawTypeIndex < 0)
                 _fieldDrawTypeIndex = 0;
 
-            _fieldDrawTypeIndex = EditorGUI.Popup(pos, fieldViewTypeString, _fieldDrawTypeIndex, fieldDrawingTypes);
-            _selectedType = t.Name + " " + fieldDrawingTypes[_fieldDrawTypeIndex];
-            pos.y += pos.height;
+            //draw select type viewer pop-up
+             _fieldDrawTypeIndex = EditorGUI.Popup(pos, fieldViewTypeString, _fieldDrawTypeIndex, fieldDrawingTypes);
+
+
+
+            var newSelectedType = t.Name + " " + fieldDrawingTypes[_fieldDrawTypeIndex];
+            if (_selectedType == null || !_selectedType.Equals(newSelectedType))
+            {
+                _selectedType = newSelectedType;
+
+                if (onEditModified!=null)
+                    onEditModified();
+
+            }
+            pos.y += pos.height;            
+            
+
         }
 
 
     }
 
-    public void DrawSelectedTypeSetup(ref Rect pos)
+    public void DrawSelectedTypeSetup(ref Rect pos, Action onEditModified = null)
     {
         pos.height = EntryComponent.SingleLineHeight;
 
         if (!string.IsNullOrEmpty(_selectedType) && _selectedType.Contains(SliderName))
         {
+            bool valueChanged = false;
+
             var val = EditorGUI.IntField(pos, "Min Val", (int)_sliderMinVal);
             if (val != (int)_sliderMinVal)
             {
                 _sliderMinVal = val;
                 if (_sliderMaxVal < _sliderMinVal) _sliderMaxVal = _sliderMinVal;
-
+                valueChanged = true;
             }
             pos.y += pos.height;
 
@@ -452,11 +505,14 @@ public class BasicFieldViewer
             {
                 _sliderMaxVal = val2;
                 if (_sliderMaxVal < _sliderMinVal) _sliderMinVal = _sliderMaxVal;
-
+                valueChanged = true;
             }
 
             pos.y += pos.height;
 
+
+            if (valueChanged && onEditModified != null)
+                onEditModified();
         }
     }
 
@@ -469,23 +525,18 @@ public class BasicFieldViewer
 [Serializable]
 public class BasicFieldData
 {
-    [SerializeField] private double _doubleVal = 0;//holds float and double values
-    [SerializeField] private long _longVal = 0;//holds int and long values
+    [SerializeField] private double _doubleVal ;//holds float and double values
+    [SerializeField] private long _longVal;//holds int and long values
 
-    [SerializeField] private char _charVal = ' ';
-    [SerializeField] private string _stringVal = "";
+    [SerializeField] private char _charVal;
+    [SerializeField] private string _stringVal;
 
-    [SerializeField] private Vector3Int _vector3IntVal = Vector3Int.zero;
-    [SerializeField] private Vector4 _vector4Val = Vector4.zero;//holds vector2, vector3 and vector4 values
+    [SerializeField] private Vector3Int _vector3IntVal;
+    [SerializeField] private Vector4 _vector4Val;//holds vector2, vector3 and vector4 values
 
-    public BasicFieldData()
-    {
-        
-    }
+
     public BasicFieldData(BasicFieldData other)
     {
-        if(other == null)
-            throw new ArgumentNullException();
 
         this._doubleVal = other._doubleVal;
         this._longVal = other._longVal;
@@ -500,6 +551,15 @@ public class BasicFieldData
         return (T)GetValue(typeof(T));
     }
 
+    public BasicFieldData()
+    {
+        _doubleVal = 0;
+        _longVal = 0;
+        _charVal = ' ';
+        _stringVal = "";
+        _vector4Val = Vector4.zero;
+        _vector3IntVal = Vector3Int.zero;
+    }
     public object GetValue(Type objType)
     {
         if (objType == typeof(int))
@@ -552,31 +612,35 @@ public class BasicFieldData
         else if (val is Vector3)
         {
             var vector3Val = (Vector3)val;
-            _vector3IntVal = new Vector3Int((int)vector3Val.x, (int)vector3Val.y, (int)vector3Val.z);
-            _vector4Val = new Vector4(vector3Val.x, vector3Val.y, vector3Val.z);
+            _vector3IntVal.x = (int)(_vector4Val.x =  vector3Val.x);
+            _vector3IntVal.y = (int)(_vector4Val.y =  vector3Val.y);
+            _vector3IntVal.z = (int)(_vector4Val.z =  vector3Val.z);
         }
         else if (val is Vector2)
         {
             var vector2Val = (Vector2)val;
-            _vector3IntVal = new Vector3Int((int)vector2Val.x, (int)vector2Val.y, 0);
-            _vector4Val = new Vector4(vector2Val.x, vector2Val.y, 0);
+            _vector3IntVal.x = (int)(_vector4Val.x = vector2Val.x);
+            _vector3IntVal.y = (int)(_vector4Val.y = vector2Val.y);
         }
         else if (val is Vector3Int)
         {
             _vector3IntVal = (Vector3Int)val;
-            _vector4Val = new Vector4(_vector3IntVal.x, _vector3IntVal.y, _vector3IntVal.z);
+            _vector4Val.x = _vector3IntVal.x = _vector3IntVal.x;
+            _vector4Val.y = _vector3IntVal.y = _vector3IntVal.y;
+            _vector4Val.y = _vector3IntVal.z = _vector3IntVal.z;
         }
         else if (val is Vector2Int)
         {
             var vector2Int = (Vector2Int)val;
-            _vector4Val = new Vector4(vector2Int.x, vector2Int.y, 0);
-            _vector3IntVal = new Vector3Int((int)_vector4Val.x, (int)_vector4Val.y, (int)_vector4Val.z);
+            _vector4Val.x = _vector3IntVal.x = vector2Int.x;
+            _vector4Val.y = _vector3IntVal.y = vector2Int.y;
         }
         else if (val is Vector4)
         {
             _vector4Val = (Vector4)val;
-            _vector3IntVal = new Vector3Int((int)_vector4Val.x, (int)_vector4Val.y, (int)_vector4Val.z);
-
+            _vector3IntVal.x = (int)(_vector4Val.x);
+            _vector3IntVal.y = (int)(_vector4Val.y);
+            _vector3IntVal.z = (int)(_vector4Val.z);
         }
     }
 
