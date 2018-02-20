@@ -112,18 +112,24 @@ export/import the data to an asset.
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -154,6 +160,8 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="1" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -164,6 +172,8 @@ export/import the data to an asset.
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -199,7 +209,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponentBase</Name>
         <Access>Public</Access>
-        <Location left="1400" top="1286" />
+        <Location left="1370" top="1286" />
         <Size width="407" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private string _name</Member>
@@ -212,7 +222,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_Collection</Name>
         <Access>Public</Access>
-        <Location left="1284" top="1882" />
+        <Location left="1254" top="1861" />
         <Size width="276" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -220,7 +230,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_CollectionSelector</Name>
         <Access>Public</Access>
-        <Location left="1257" top="1818" />
+        <Location left="1227" top="1797" />
         <Size width="304" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -233,7 +243,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_ObjectField</Name>
         <Access>Public</Access>
-        <Location left="1274" top="1521" />
+        <Location left="1254" top="1556" />
         <Size width="276" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>Abstract</Modifier>
@@ -300,7 +310,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_UnityObjectField</Name>
         <Access>Public</Access>
-        <Location left="874" top="1686" />
+        <Location left="857" top="1665" />
         <Size width="247" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -308,7 +318,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_EnumField</Name>
         <Access>Public</Access>
-        <Location left="1135" top="1686" />
+        <Location left="1118" top="1665" />
         <Size width="211" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -316,20 +326,20 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_BasicField</Name>
         <Access>Public</Access>
-        <Location left="652" top="1686" />
+        <Location left="635" top="1665" />
         <Size width="212" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>int/float/double/string/char/vectors</Text>
-        <Location left="412" top="1711" />
+        <Location left="395" top="1690" />
         <Size width="222" height="50" />
       </Entity>
       <Entity type="Class">
         <Name>EntryComponent_CustomDataField</Name>
         <Access>Public</Access>
-        <Location left="1257" top="1944" />
+        <Location left="1227" top="2025" />
         <Size width="304" height="78" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -375,6 +385,14 @@ export/import the data to an asset.
         <Collapsed>False</Collapsed>
         <Modifier>Abstract</Modifier>
       </Entity>
+      <Entity type="Class">
+        <Name>EntryComponent_EntryCell</Name>
+        <Access>Public</Access>
+        <Location left="1227" top="2097" />
+        <Size width="304" height="79" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="1" second="0">
@@ -382,6 +400,8 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -414,8 +434,6 @@ export/import the data to an asset.
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="9" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
