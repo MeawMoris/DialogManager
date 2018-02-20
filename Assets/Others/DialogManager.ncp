@@ -112,24 +112,18 @@ export/import the data to an asset.
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -160,8 +154,6 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="1" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -172,8 +164,6 @@ export/import the data to an asset.
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -199,17 +189,17 @@ export/import the data to an asset.
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
-        <Name>ComponentsEntry</Name>
+        <Name>Entry_Components</Name>
         <Access>Public</Access>
-        <Location left="2002" top="1187" />
-        <Size width="180" height="116" />
-        <Collapsed>False</Collapsed>
+        <Location left="1749" top="1188" />
+        <Size width="232" height="77" />
+        <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>EntryComponentBase</Name>
         <Access>Public</Access>
-        <Location left="1370" top="1286" />
+        <Location left="1164" top="1286" />
         <Size width="407" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private string _name</Member>
@@ -222,7 +212,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_Collection</Name>
         <Access>Public</Access>
-        <Location left="1254" top="1861" />
+        <Location left="1052" top="1925" />
         <Size width="276" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -230,20 +220,15 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_CollectionSelector</Name>
         <Access>Public</Access>
-        <Location left="1227" top="1797" />
+        <Location left="1025" top="1861" />
         <Size width="304" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
-      <Entity type="Comment">
-        <Text>template design pattern to create a couple of intial types</Text>
-        <Location left="1799" top="1159" />
-        <Size width="133" height="63" />
-      </Entity>
       <Entity type="Class">
         <Name>EntryComponent_ObjectField</Name>
         <Access>Public</Access>
-        <Location left="1254" top="1556" />
+        <Location left="1048" top="1556" />
         <Size width="276" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>Abstract</Modifier>
@@ -251,15 +236,15 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryBase</Name>
         <Access>Public</Access>
-        <Location left="2118" top="996" />
+        <Location left="2174" top="987" />
         <Size width="225" height="94" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SequenceEntry</Name>
+        <Name>Entry_Sequence</Name>
         <Access>Public</Access>
-        <Location left="2355" top="1188" />
+        <Location left="2389" top="1188" />
         <Size width="321" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public bool IsBranch { get; set; }</Member>
@@ -268,34 +253,18 @@ export/import the data to an asset.
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>MethodTriggerer</Name>
+        <Name>Entry_MethodTriggerer</Name>
         <Access>Public</Access>
-        <Location left="2741" top="1188" />
+        <Location left="2968" top="1188" />
         <Size width="180" height="116" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>EntryBranchData</Name>
+        <Name>Entry_EntryStarter</Name>
         <Access>Public</Access>
-        <Location left="2518" top="1417" />
-        <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>ConversationTriggerer</Name>
-        <Access>Public</Access>
-        <Location left="2938" top="1188" />
+        <Location left="3246" top="1188" />
         <Size width="180" height="116" />
-        <Collapsed>True</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>ConversationStarter</Name>
-        <Access>Public</Access>
-        <Location left="3143" top="1188" />
-        <Size width="162" height="216" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
@@ -310,7 +279,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_UnityObjectField</Name>
         <Access>Public</Access>
-        <Location left="857" top="1665" />
+        <Location left="651" top="1665" />
         <Size width="247" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -318,7 +287,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_EnumField</Name>
         <Access>Public</Access>
-        <Location left="1118" top="1665" />
+        <Location left="912" top="1665" />
         <Size width="211" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -326,20 +295,20 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>EntryComponent_BasicField</Name>
         <Access>Public</Access>
-        <Location left="635" top="1665" />
+        <Location left="429" top="1665" />
         <Size width="212" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>int/float/double/string/char/vectors</Text>
-        <Location left="395" top="1690" />
+        <Location left="189" top="1690" />
         <Size width="222" height="50" />
       </Entity>
       <Entity type="Class">
         <Name>EntryComponent_CustomDataField</Name>
         <Access>Public</Access>
-        <Location left="1227" top="2025" />
+        <Location left="1025" top="2089" />
         <Size width="304" height="78" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -361,35 +330,58 @@ export/import the data to an asset.
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>StructDataEntry</Name>
+        <Name>Entry_ComponentsEntryTemplate</Name>
         <Access>Public</Access>
-        <Location left="2100" top="1556" />
-        <Size width="262" height="94" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">List&lt;EntryComponent_BasicField&gt; components</Member>
+        <Location left="1749" top="1344" />
+        <Size width="232" height="77" />
+        <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>ClassDataEntry</Name>
-        <Access>Public</Access>
-        <Location left="1824" top="1556" />
-        <Size width="262" height="94" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>DataEntry</Name>
-        <Access>Public</Access>
-        <Location left="2019" top="1442" />
-        <Size width="162" height="78" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>EntryComponent_EntryCell</Name>
         <Access>Public</Access>
-        <Location left="1227" top="2097" />
+        <Location left="1025" top="2161" />
         <Size width="304" height="79" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Entry_ComponentsGroupTemplate</Name>
+        <Access>Public</Access>
+        <Location left="1749" top="1482" />
+        <Size width="232" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Entry_SequenceBranch</Name>
+        <Access>Public</Access>
+        <Location left="2289" top="1429" />
+        <Size width="256" height="79" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Entry_SequenceStart</Name>
+        <Access>Public</Access>
+        <Location left="2562" top="1429" />
+        <Size width="228" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Entry_EventsManagerTriggerer</Name>
+        <Access>Public</Access>
+        <Location left="2946" top="1331" />
+        <Size width="223" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Entry_Start</Name>
+        <Access>Public</Access>
+        <Location left="2069" top="1188" />
+        <Size width="162" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
@@ -400,8 +392,6 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -417,71 +407,71 @@ export/import the data to an asset.
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="6" second="2">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="7" second="3">
+      <Relationship type="Generalization" first="6" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="10" second="8">
+      <Relationship type="Generalization" first="9" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="2" second="8">
+      <Relationship type="Generalization" first="2" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="9" second="11">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-        <StartRole>list</StartRole>
-        <StartMultiplicity>1..*</StartMultiplicity>
-      </Relationship>
-      <Relationship type="Generalization" first="12" second="8">
+      <Relationship type="Generalization" first="10" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="9" second="8">
+      <Relationship type="Generalization" first="8" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="13" second="8">
+      <Relationship type="Generalization" first="12" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="15" second="7">
+      <Relationship type="Generalization" first="14" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="17" second="7">
+      <Relationship type="Generalization" first="13" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="16" second="7">
+      <Relationship type="Comment" first="15" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="18" second="17">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="19" second="3">
+      <Relationship type="Generalization" first="16" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="22" second="24">
+      <Relationship type="Generalization" first="19" second="2">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="23" second="24">
+      <Relationship type="Generalization" first="20" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="21" second="19">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="24" second="2">
+      <Relationship type="Generalization" first="22" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="23" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="24" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="25" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>

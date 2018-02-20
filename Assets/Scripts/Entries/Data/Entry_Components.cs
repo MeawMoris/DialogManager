@@ -20,7 +20,7 @@ public class Entry_Components : EntryBase
 
 
     //properties-----------------------------------------------------------------------------------------
-    public virtual List<EntryComponent> Componets
+    public virtual IList<EntryComponent> Componets
     {
         get
         {
@@ -28,7 +28,6 @@ public class Entry_Components : EntryBase
                 _componets = new List<EntryComponent>();
             return _componets;
         }
-        private set { _componets = value; }
     }
 
 
@@ -61,13 +60,13 @@ public class Entry_Components : EntryBase
     //methods--------------------------------------------------------------------------------------------
     public void ValidateFieldName(EntryComponent component)
     {
-        if(!_componets.Contains(component))
+        if(!Componets.Contains(component))
             throw new ArgumentException("component does not belong to entry");
 
         if (string.IsNullOrEmpty(component.FieldName))
             throw new ArgumentNullException("field new name must not be null");
 
-        if (_componets.Any(x => x != component && x.FieldName.Equals(component.FieldName)))
+        if (Componets.Any(x => x != component && x.FieldName.Equals(component.FieldName)))
             component.FieldName = GetNextAvailableName();
     }
     public string GetNextAvailableName()
@@ -85,13 +84,13 @@ public class Entry_Components : EntryBase
     {
         var window = new Window_Entry_Components();
         window.Initialize(this);
-        return window; // todo to implement
+        return window; 
     }
     public override EditorWindow GetVisableWindow()
     {
         var window = (Window_Entry_Components)EditorWindow.GetWindow(typeof(Window_Entry_Components));
         window.Initialize(this);
-        return window; // todo to implement
+        return window; 
     }
 
     //---------------------------------------------------------------------------------------------------
@@ -101,7 +100,7 @@ public class Entry_Components : EntryBase
 public class Entry_ComponentsEntryTemplate : Entry_Components
 {
    [SerializeField] private List<EntryComponentTemplate> _templateComponents;
-
+    private EntryComponentTemplateWindowAdapter _templatesListAdapter;
     //fields---------------------------------------------------------------------------------------------
     public List<EntryComponentTemplate> TemplateComponents
     {
@@ -112,9 +111,19 @@ public class Entry_ComponentsEntryTemplate : Entry_Components
             return _templateComponents;
         }
     }
-    public override List<EntryComponent> Componets
+    public EntryComponentTemplateWindowAdapter TemplatesListAdapter
     {
-        get { return TemplateComponents.Select(x=>x.TemplateComponent).ToList(); }
+        get
+        {
+            if(_templatesListAdapter ==null)
+                _templatesListAdapter = new EntryComponentTemplateWindowAdapter(TemplateComponents);
+            return _templatesListAdapter;
+        }
+    }
+
+    public override IList<EntryComponent> Componets
+    {
+        get { return TemplatesListAdapter; }
     }
 
     //constructors---------------------------------------------------------------------------------------
@@ -128,19 +137,20 @@ public class Entry_ComponentsEntryTemplate : Entry_Components
     {
         var window = new Window_Entry_ComponentsEntryTemplate();
         window.Initialize(this);
-        return window; // todo to implement
+
+        return window; // todo to implement, set entry limits
     }
     public override EditorWindow GetVisableWindow()
     {
         var window = (Window_Entry_Components)EditorWindow.GetWindow(typeof(Window_Entry_ComponentsEntryTemplate));
         window.Initialize(this);
-        return window; // todo to implement
+        return window; // todo to implement, set entry limits
     }
 
 }
 
+
 public class Window_Entry_ComponentsEntryTemplate: Window_Entry_Components
 {
-    protected new EntryComponentListAdaptor<EntryComponent> _componentsListadapter;
 
 }

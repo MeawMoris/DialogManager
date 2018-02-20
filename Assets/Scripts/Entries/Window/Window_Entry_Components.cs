@@ -132,8 +132,7 @@ public class Window_Entry_Components : Window_EntryBase
     }
     protected virtual void OnAddComponentClick(IList<EntryComponent> list)
     {
-        //todo show needed types
-        //todo set select type window pop up filters
+        //todo?: filter all components that are usable from the non usable
         if (_addComponentGenericMenu == null)
         {
             _addComponentGenericMenu = new GenericMenu();

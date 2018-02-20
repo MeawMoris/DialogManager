@@ -9,12 +9,6 @@ using UnityEngine;
 [Serializable]
 public abstract class EntryComponent_SelectTypeBase : EntryComponent
 {
-    /*
-     * todo: layer field
-     * todo: tag field
-     * */
-
-
 
     //fields--------------------------------------------------------------------------------------
     private string filterString;

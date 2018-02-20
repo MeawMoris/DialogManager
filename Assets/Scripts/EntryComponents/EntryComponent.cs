@@ -11,9 +11,12 @@ using Rotorz.ReorderableList;
 /*
 todo: Separate editor script from non-editor
 todo: create dialogEntry component
-todo: add the option to create a custom data class from components, and create a EntryComponent_CustomData component for it
- 
-     
+todo: add the option to create a custom data group from components, and create a EntryComponent_GroupInstance component for it
+todo: limit collection component element count
+todo: manifest all components
+todo?: layers and tags components
+todo: create an attribute for all selectable components (all components that can be used in the entries)
+todo: save components and entries in an asset     
 */
 //---------------------------------------------------------------
 [Serializable]

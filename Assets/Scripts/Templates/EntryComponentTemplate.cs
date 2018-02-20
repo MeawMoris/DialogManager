@@ -5,6 +5,7 @@ using UnityEngine;
 
 [Serializable]
 public class EntryComponentTemplate : ICloneable
+    //todo: create an interface for all template types
 {
     [SerializeField] private EntryComponent _templateComponent;
     [SerializeField] private List<EntryComponent> _observersList;
@@ -20,6 +21,14 @@ public class EntryComponentTemplate : ICloneable
     }
 
     //-----------------------------------------------------------------
+    public EntryComponentTemplate(EntryComponent template)
+    {
+        if(template == null)
+            throw new ArgumentNullException();
+        _templateComponent = template;
+        _holder = template.Holder;
+        _templateComponent.OnEditModeModified += OnTemplateEditModeModified;
+    }
     public EntryComponentTemplate(Type componentType, Entry_Components holder)
     {
 
