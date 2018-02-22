@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-[Serializable]
+[Serializable, SelectableComponent("Basic Field"), SelectableCollectionComponent]
 public class EntryComponent_BasicField : EntryComponent_SelectTypeBase
 {
 

@@ -29,5 +29,14 @@ public abstract class Window_EntryBase : EditorWindow
 
     }
 
+    private void OnDestroy()
+    {
+        if(EntryData != null)
+            if (EntryData.OnWindowClose != null)
+                EntryData.OnWindowClose();
+    }
+
+
+
 
 }

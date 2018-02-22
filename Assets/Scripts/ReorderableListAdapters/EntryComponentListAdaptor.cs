@@ -38,14 +38,15 @@ public class EntryComponentListAdaptor<t> : GenericListAdaptor<t>
 
         else
             List.Add(CreateInstance());
+
+
     }
 
     public override void Insert(int index)
     {
-        Add();
-        var newItem = List[List.Count - 1];
-        List[List.Count - 1] = List[index];
-        List[index] = newItem;
+        Add();      
+        List.Insert(index, List[List.Count-1]);
+        Remove(List.Count - 1);
     }
 
     public override void Duplicate(int index)

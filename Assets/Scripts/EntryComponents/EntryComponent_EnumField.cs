@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-[Serializable]
+[Serializable, SelectableComponent("Enum"), SelectableCollectionComponent]
 public class EntryComponent_EnumField : EntryComponent_SelectTypeBase
 {
     private static readonly string[] EnumTypeName = { "Popup", "Flags" };

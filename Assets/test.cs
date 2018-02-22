@@ -17,17 +17,17 @@ public class test : MonoBehaviour
 	void Update ()
 	{
 
+	    if (Input.GetKeyDown(KeyCode.Z))
+	        entry.GetNewWindow().ShowUtility();
 	    if (Input.GetKeyDown(KeyCode.X))
-	        entry.GetVisableWindow().Show();
-	    if (Input.GetKeyDown(KeyCode.C))
 	    {
 	        entry.ShowAddButton = entry.ShowEditModeOption = editMode = !editMode;
 
 	    }
-        if(Input.GetKeyDown(KeyCode.A))
-            System.GC.Collect();
+	    if (Input.GetKeyDown(KeyCode.C))
+	        entry.AddObserver().GetNewWindow().Show();
 
-    }
+	}
 
     void initializeEntry()
     {

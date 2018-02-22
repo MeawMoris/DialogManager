@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-[Serializable]
+[Serializable,SelectableComponent("Unity Object"), SelectableCollectionComponent]
 public class EntryComponent_UnityObjectField : EntryComponent_SelectTypeBase
 {
     [SerializeField] private UnityEngine.Object _value;

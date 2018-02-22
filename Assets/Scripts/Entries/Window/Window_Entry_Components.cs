@@ -46,7 +46,6 @@ public class Window_Entry_Components : Window_EntryBase
         }
     }
 
-
     //messages----------------------------------------------------------------------
     protected override void OnGUI()
     {
@@ -65,23 +64,7 @@ public class Window_Entry_Components : Window_EntryBase
         DrawList();
         this.Repaint();
     }
-    protected void DrawListHeader()
-    {
-        EditorGUILayout.BeginHorizontal();
-        //draw component title
-        ReorderableListGUI.Title("Components");
 
-        //draw add button
-        if(EntryData.ShowAddButton)
-            if (GUILayout.Button("Add", EditorStyles.miniButtonLeft, GUILayout.Width(40), GUILayout.Height(20)))
-                OnAddComponentClick(EntryData.Componets);
-
-        //draw settings button
-        if (GUILayout.Button("Settings", EditorStyles.miniButtonRight, GUILayout.Width(60), GUILayout.Height(20)))
-            SettingsGenericMenu.ShowAsContext();
-        
-        EditorGUILayout.EndHorizontal();
-    }
     protected void UpdateListMode()
     {
         if (EntryData.ShowEditMode)
@@ -114,6 +97,24 @@ public class Window_Entry_Components : Window_EntryBase
             _componentsListControl.Flags |= ReorderableListFlags.HideAddButton;
 
     }
+
+    protected void DrawListHeader()
+    {
+        EditorGUILayout.BeginHorizontal();
+        //draw component title
+        ReorderableListGUI.Title("Components");
+
+        //draw add button
+        if(EntryData.ShowAddButton)
+            if (GUILayout.Button("Add", EditorStyles.miniButtonLeft, GUILayout.Width(40), GUILayout.Height(20)))
+                OnAddComponentClick(EntryData.Componets);
+
+        //draw settings button
+        if (GUILayout.Button("Settings", EditorStyles.miniButtonRight, GUILayout.Width(60), GUILayout.Height(20)))
+            SettingsGenericMenu.ShowAsContext();
+        
+        EditorGUILayout.EndHorizontal();
+    }
     protected void DrawList()
     {
         scrollerPos = EditorGUILayout.BeginScrollView(scrollerPos);
@@ -127,12 +128,13 @@ public class Window_Entry_Components : Window_EntryBase
         item.ShowFieldTypeLabel = EntryData.ShowComponentsTypeLabel;
         item.IsInEditMode = EntryData.ShowEditMode;
         item.DrawView(ref position);
-        this.Repaint();
+        item.OnEditModeModified+= Repaint;
+        item.OnViewModeModified+= Repaint;
+
         return item;
     }
     protected virtual void OnAddComponentClick(IList<EntryComponent> list)
     {
-        //todo?: filter all components that are usable from the non usable
         if (_addComponentGenericMenu == null)
         {
             _addComponentGenericMenu = new GenericMenu();
@@ -143,7 +145,8 @@ public class Window_Entry_Components : Window_EntryBase
 
             //get all sub types
             var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
-                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
+                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t) 
+                && t.GetCustomAttributes(true).Any(x=>x.GetType() == typeof(SelectableComponentAttribute))
                 select t).ToList();
 
             //set contexts menu options and OnItemSelect

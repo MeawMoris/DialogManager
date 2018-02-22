@@ -78,6 +78,11 @@ public class Entry_Components : EntryBase
         }
         return string.Format("{0} {1}", DefaultComponentName, i);
     }
+
+    public virtual void OnComponentsChanged(ListChangeType changeTyPE)
+    {
+        
+    }
     //editor methods-------------------------------------------------------------------------------------
 
     public override EditorWindow GetNewWindow()
@@ -97,40 +102,128 @@ public class Entry_Components : EntryBase
 }
 
 
-public class Entry_ComponentsEntryTemplate : Entry_Components
+public class Entry_ComponentsEntryTemplate : Entry_Components,ITemplate<Entry_Components>
 {
-   [SerializeField] private List<EntryComponentTemplate> _templateComponents;
-    private EntryComponentTemplateWindowAdapter _templatesListAdapter;
+    [SerializeField] private List<EntryComponentTemplate> _templateComponents;
+    [SerializeField] private List<Entry_Components> _observers;
+
+    private Adapter_ComponentsTemplateWindow _templatesListAdapter;
+
     //fields---------------------------------------------------------------------------------------------
     public List<EntryComponentTemplate> TemplateComponents
     {
         get
         {
-            if(_templateComponents == null)
+            if (_templateComponents == null)
                 _templateComponents = new List<EntryComponentTemplate>();
             return _templateComponents;
         }
     }
-    public EntryComponentTemplateWindowAdapter TemplatesListAdapter
+    public Adapter_ComponentsTemplateWindow TemplatesListAdapter
     {
         get
         {
-            if(_templatesListAdapter ==null)
-                _templatesListAdapter = new EntryComponentTemplateWindowAdapter(TemplateComponents);
+            if (_templatesListAdapter == null)
+                _templatesListAdapter = new Adapter_ComponentsTemplateWindow(this);
             return _templatesListAdapter;
         }
     }
-
     public override IList<EntryComponent> Componets
     {
         get { return TemplatesListAdapter; }
     }
 
+
     //constructors---------------------------------------------------------------------------------------
 
     //properties-----------------------------------------------------------------------------------------
 
-    //methods--------------------------------------------------------------------------------------------
+    //methods--------------------------------------------------------------------------------------------    
+    //methods--------------------------------------------------------------------------------------------    
+    public Entry_Components TemplateInstance
+    {
+        get { return this; }
+    }
+    public List<Entry_Components> ObserversList
+    {
+        get { return _observers ?? (_observers = new List<Entry_Components>()); }
+    }
+    public Entry_Components AddObserver()
+    {
+        Entry_Components componentEntry = new Entry_Components();
+        TemplateComponents.ForEach(x=>componentEntry.Componets.Add(x.AddObserver()));
+        //componentEntry.OnWindowClose += () => RemoveObserver(componentEntry);
+        ObserversList.Add(componentEntry);
+        return componentEntry;
+    }
+
+    public void RemoveObserver(int index)
+    {
+        ObserversList.RemoveAt(index);
+    }
+    public void RemoveObserver(Entry_Components observer)
+    {
+        ObserversList.Remove(observer);
+    }
+    public void ClearObservers()
+    {
+        ObserversList.Clear();
+    }
+    public void OnTemplateChanged()
+    {
+        if (ObserversList.Count == 0) return;
+
+        switch (TemplatesListAdapter.LastListChangeType)
+        {
+
+            case ListChangeType.Add:
+                ObserversList.ForEach(x=>x.Componets.Add(TemplateComponents[TemplateComponents.Count-1].AddObserver()));
+                break;
+
+            case ListChangeType.Remove:
+
+                if(TemplateComponents.Count == 0)
+                    goto case ListChangeType.Clear;
+                
+                //find removed component index
+                int removedComponentIndex =-1;
+                for (var i = 0; i < ObserversList[0].Componets.Count; i++)                   
+                    if (!ObserversList[0].Componets[i].FieldName.Equals(TemplateComponents[i].TemplateInstance.FieldName))
+                    { removedComponentIndex = i; break;}
+
+                //remove component from observers
+                ObserversList.ForEach(x=>x.Componets.RemoveAt(removedComponentIndex));
+                break;
+
+               
+            case ListChangeType.Clear:
+                ObserversList.ForEach(x => x.Componets.Clear());
+                
+                break;
+            case ListChangeType.Set:
+
+                //find added component index
+                int changedComponentIndex = -1;
+                for (var i = 0; i < TemplateComponents.Count; i++)
+                    if (!ObserversList[0].Componets[i].FieldName.Equals(TemplateComponents[i].TemplateInstance.FieldName))
+                    { changedComponentIndex = i; break; }
+
+                if(changedComponentIndex == -1)
+                    break;
+
+                //insert component from observers
+                ObserversList.ForEach(x => x.Componets[changedComponentIndex]= TemplateComponents[changedComponentIndex].AddObserver());
+
+                break;
+
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+
+
+    }
 
     //editor methods-------------------------------------------------------------------------------------
     public override EditorWindow GetNewWindow()
@@ -142,7 +235,7 @@ public class Entry_ComponentsEntryTemplate : Entry_Components
     }
     public override EditorWindow GetVisableWindow()
     {
-        var window = (Window_Entry_Components)EditorWindow.GetWindow(typeof(Window_Entry_ComponentsEntryTemplate));
+        var window = (Window_Entry_Components) EditorWindow.GetWindow(typeof(Window_Entry_ComponentsEntryTemplate));
         window.Initialize(this);
         return window; // todo to implement, set entry limits
     }

@@ -28,9 +28,8 @@ public class EntryComponentTemplateListAdaptor : GenericListAdaptor<EntryCompone
     public override void Insert(int index)
     {
         Add();
-        var newItem = List[List.Count - 1];
-        List[List.Count - 1] = List[index];
-        List[index] = newItem;
+        List.Insert(index, List[List.Count - 1]);
+        Remove(List.Count - 1);
     }
 
     public override void Duplicate(int index)
@@ -46,7 +45,7 @@ public class EntryComponentTemplateListAdaptor : GenericListAdaptor<EntryCompone
 
     public override float GetItemHeight(int index)
     {
-        return Math.Max(ReorderableListGUI.DefaultItemHeight, List[index].TemplateComponent.GetPropertyHeight());
+        return Math.Max(ReorderableListGUI.DefaultItemHeight, List[index].TemplateInstance.GetPropertyHeight());
     }
 
     //------------------------------------------------------------------------------------

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+[Serializable, SelectableComponent("Collection Selector"), SelectableCollectionComponent]
 public class EntryComponent_CollectionSelector : EntryComponent
 {
     [SerializeField] private EntryComponent_Collection _selectedCollection;
