@@ -9,12 +9,25 @@ using UnityEngine;
 [Serializable]
 public class Entry_Components : EntryBase
 {
+    
+    //statics--------------------------------------------------------------------------------------------
+    public static string DefaultComponentName
+    {
+        get { return "component"; }
+    }
+
+
     //fields---------------------------------------------------------------------------------------------
     [SerializeField] private List<EntryComponent> _componets;
     [SerializeField] private bool _showEditMode;
     [SerializeField] private bool _showComponentsTypeLabel;
+
     [SerializeField] private bool _showAddButton;
+    [SerializeField] private bool _showRemoveButton;
+    [SerializeField] private bool _showDraggableButton;
     [SerializeField] private bool _showEditModeOption;
+
+    private Action<ListChangeType> _onComponentChanged;
 
     //constructors---------------------------------------------------------------------------------------
 
@@ -29,6 +42,16 @@ public class Entry_Components : EntryBase
             return _componets;
         }
     }
+    public Action<ListChangeType> OnComponentChanged
+    {
+        get
+        {
+            if (_onComponentChanged == null)
+                _onComponentChanged = OnComponentsChanged;
+            return _onComponentChanged;
+        }
+       private set { _onComponentChanged = value; }
+    }
 
 
     public bool ShowEditMode
@@ -36,25 +59,34 @@ public class Entry_Components : EntryBase
         get { return _showEditMode; }
         set { _showEditMode = value; }
     }
+
     public bool ShowAddButton
     {
         get { return _showAddButton; }
         set { _showAddButton = value; }
+    }
+    public bool ShowRemoveButton
+    {
+        get { return _showRemoveButton; }
+        set { _showRemoveButton = value; }
+    }
+    public bool ShowDraggableButton
+    {
+        get { return _showDraggableButton; }
+        set { _showDraggableButton = value; }
     }
     public bool ShowEditModeOption
     {
         get { return _showEditModeOption; }
         set { _showEditModeOption = value; }
     }
+
     public bool ShowComponentsTypeLabel
     {
         get { return _showComponentsTypeLabel; }
         set { _showComponentsTypeLabel = value; }
     }
-    private string DefaultComponentName
-    {
-        get { return "component"; }
-    }
+
 
 
     //methods--------------------------------------------------------------------------------------------
@@ -79,7 +111,15 @@ public class Entry_Components : EntryBase
         return string.Format("{0} {1}", DefaultComponentName, i);
     }
 
-    public virtual void OnComponentsChanged(ListChangeType changeTyPE)
+    public void AddListener_OnComponentChanged(Action<ListChangeType> listener)
+    {
+        OnComponentChanged += listener;
+    }
+    public void RemoveListener_OnComponentChanged(Action<ListChangeType> listener)
+    {
+        OnComponentChanged -= listener;
+    }
+    protected virtual void OnComponentsChanged(ListChangeType changeType)
     {
         
     }
@@ -112,21 +152,11 @@ public class Entry_ComponentsEntryTemplate : Entry_Components,ITemplate<Entry_Co
     //fields---------------------------------------------------------------------------------------------
     public List<EntryComponentTemplate> TemplateComponents
     {
-        get
-        {
-            if (_templateComponents == null)
-                _templateComponents = new List<EntryComponentTemplate>();
-            return _templateComponents;
-        }
+        get { return _templateComponents ?? (_templateComponents = new List<EntryComponentTemplate>()); }
     }
     public Adapter_ComponentsTemplateWindow TemplatesListAdapter
     {
-        get
-        {
-            if (_templatesListAdapter == null)
-                _templatesListAdapter = new Adapter_ComponentsTemplateWindow(this);
-            return _templatesListAdapter;
-        }
+        get { return _templatesListAdapter ?? (_templatesListAdapter = new Adapter_ComponentsTemplateWindow(this)); }
     }
     public override IList<EntryComponent> Componets
     {

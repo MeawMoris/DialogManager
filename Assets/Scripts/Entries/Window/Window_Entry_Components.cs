@@ -17,10 +17,12 @@ public class Window_Entry_Components : Window_EntryBase
     }
 
     //UI window variables-----------------------------------------------------------
-    protected EntryComponentListAdaptor<EntryComponent> _componentsListadapter;
+    private ExternalListAdapter<EntryComponent> _componentsListadapter;
     protected ReorderableListControl _componentsListControl;
     protected GenericMenu _addComponentGenericMenu;
     protected Vector2 scrollerPos;
+
+
 
     public GenericMenu SettingsGenericMenu
     {
@@ -45,6 +47,25 @@ public class Window_Entry_Components : Window_EntryBase
             return _genericMenu;
         }
     }
+    protected ExternalListAdapter<EntryComponent> ComponentsListadapter
+    {
+        get
+        {
+            if(_componentsListadapter == null)
+                InitializeComponentsReorderableList();
+            return _componentsListadapter;
+        }
+    }
+    protected ReorderableListControl ComponentsListControl
+    {
+        get
+        {
+            if(_componentsListControl== null)
+                _componentsListControl = new ReorderableListControl();
+
+            return _componentsListControl;
+        }
+    }
 
     //messages----------------------------------------------------------------------
     protected override void OnGUI()
@@ -56,7 +77,7 @@ public class Window_Entry_Components : Window_EntryBase
             EditorGUILayout.LabelField("Please initialize the window by calling the \"Initialize\" method in order to view the content.");
             return;
         }
-        if(_componentsListControl == null || _componentsListadapter == null)
+        if(ComponentsListControl == null || ComponentsListadapter == null)
             Initialize(EntryData);
         
         DrawListHeader();
@@ -68,9 +89,7 @@ public class Window_Entry_Components : Window_EntryBase
     protected void UpdateListMode()
     {
         if (EntryData.ShowEditMode)
-            _componentsListControl.Flags = 0
-                                           & ~ReorderableListFlags.DisableReordering
-                                           & ~ReorderableListFlags.HideRemoveButtons
+            ComponentsListControl.Flags = 0
                                            & ~ReorderableListFlags.DisableContextMenu
                                            | ReorderableListFlags.DisableDuplicateCommand
                                            | ReorderableListFlags.DisableAutoFocus
@@ -80,9 +99,7 @@ public class Window_Entry_Components : Window_EntryBase
 
 
         else
-            _componentsListControl.Flags = 0
-                                           | ReorderableListFlags.DisableReordering
-                                           | ReorderableListFlags.HideRemoveButtons
+            ComponentsListControl.Flags = 0
                                            | ReorderableListFlags.DisableContextMenu
                                            | ReorderableListFlags.DisableDuplicateCommand
                                            | ReorderableListFlags.DisableAutoFocus
@@ -92,9 +109,20 @@ public class Window_Entry_Components : Window_EntryBase
 
 
         if (EntryData.ShowAddButton)
-            _componentsListControl.Flags &=  ~ReorderableListFlags.HideAddButton;
+            ComponentsListControl.Flags &=  ~ReorderableListFlags.HideAddButton;
         else
-            _componentsListControl.Flags |= ReorderableListFlags.HideAddButton;
+            ComponentsListControl.Flags |= ReorderableListFlags.HideAddButton;
+
+        if (EntryData.ShowRemoveButton)
+            ComponentsListControl.Flags &= ~ReorderableListFlags.HideRemoveButtons;
+        else
+            ComponentsListControl.Flags |= ReorderableListFlags.HideRemoveButtons;
+
+        if (EntryData.ShowDraggableButton)
+            ComponentsListControl.Flags &= ~ReorderableListFlags.DisableReordering;
+        else
+            ComponentsListControl.Flags |= ReorderableListFlags.DisableReordering;
+
 
     }
 
@@ -107,7 +135,7 @@ public class Window_Entry_Components : Window_EntryBase
         //draw add button
         if(EntryData.ShowAddButton)
             if (GUILayout.Button("Add", EditorStyles.miniButtonLeft, GUILayout.Width(40), GUILayout.Height(20)))
-                OnAddComponentClick(EntryData.Componets);
+                OnAdd(EntryData.Componets);
 
         //draw settings button
         if (GUILayout.Button("Settings", EditorStyles.miniButtonRight, GUILayout.Width(60), GUILayout.Height(20)))
@@ -118,22 +146,39 @@ public class Window_Entry_Components : Window_EntryBase
     protected void DrawList()
     {
         scrollerPos = EditorGUILayout.BeginScrollView(scrollerPos);
-        _componentsListControl.Draw(_componentsListadapter);
+        ComponentsListControl.Draw(ComponentsListadapter);
         EditorGUILayout.EndScrollView();
     }
 
 
-    protected virtual EntryComponent ComponentItemDrawer(Rect position, EntryComponent item)
+
+    //custom methods----------------------------------------------------------------
+    void InitializeComponentsReorderableList()
+    {
+        _componentsListadapter = new  ExternalListAdapter<EntryComponent>(EntryData.Componets,ItemDrawer);
+        ComponentsListadapter.OnAdd+= OnAdd;
+        ComponentsListadapter.OnRemove+= OnRemove;
+        ComponentsListadapter.OnDuplicate+= OnDuplicate;
+        ComponentsListadapter.OnInsert+= OnInsert;
+        ComponentsListadapter.OnGetItemHeight+= OnGetItemHeight;
+        ComponentsListadapter.OnMove+= OnMove;
+        
+    }
+
+
+    protected virtual EntryComponent ItemDrawer(Rect position, EntryComponent item)
     {
         item.ShowFieldTypeLabel = EntryData.ShowComponentsTypeLabel;
         item.IsInEditMode = EntryData.ShowEditMode;
         item.DrawView(ref position);
-        item.OnEditModeModified+= Repaint;
-        item.OnViewModeModified+= Repaint;
+        item.OnEditModeModified += Repaint;
+        item.OnViewModeModified += Repaint;
 
         return item;
     }
-    protected virtual void OnAddComponentClick(IList<EntryComponent> list)
+
+
+    protected virtual void OnAdd(IList<EntryComponent> list)
     {
         if (_addComponentGenericMenu == null)
         {
@@ -145,8 +190,8 @@ public class Window_Entry_Components : Window_EntryBase
 
             //get all sub types
             var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
-                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t) 
-                && t.GetCustomAttributes(true).Any(x=>x.GetType() == typeof(SelectableComponentAttribute))
+                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
+                      && t.GetCustomAttributes(true).Any(x => x.GetType() == typeof(SelectableComponentAttribute))
                 select t).ToList();
 
             //set contexts menu options and OnItemSelect
@@ -160,26 +205,47 @@ public class Window_Entry_Components : Window_EntryBase
                         instance.Initialize(EntryData, EntryData.GetNextAvailableName());
                         instance.OnEditModeModified += () => { EntryData.ValidateFieldName(instance); };
                         list.Add(instance);
-
+                        EntryData.OnComponentChanged(ListChangeType.Add);
                     });
             }
         }
 
         _addComponentGenericMenu.ShowAsContext();
+    }
+    protected virtual void OnInsert(IList<EntryComponent> entryComponents, int i)
+    {
+        OnAdd(entryComponents);
+        entryComponents.Insert(i, entryComponents[entryComponents.Count - 1]);
+        entryComponents.RemoveAt(entryComponents.Count - 1);
+    }
+    protected virtual void OnRemove(IList<EntryComponent> entryComponents, int i)
+    {
+        entryComponents.RemoveAt(i);
+        EntryData.OnComponentChanged(ListChangeType.Remove);
 
+    }
+    protected virtual void OnDuplicate(IList<EntryComponent> entryComponents, int i)
+    {
+        entryComponents.Insert(i, null);
+        entryComponents[i] = entryComponents[i + 1].Clone() as EntryComponent;
+        EntryData.OnComponentChanged(ListChangeType.Duplicate);
+
+    }
+    protected virtual float OnGetItemHeight(IList<EntryComponent> entryComponents, int i)
+    {
+        return entryComponents[i].GetPropertyHeight();
+    }
+    protected virtual void OnMove(IList<EntryComponent> entryComponents, int oldPos, int newPos)
+    {
+        if (newPos > oldPos)
+            newPos--;
+        var temp = entryComponents[newPos];
+        entryComponents[newPos] = entryComponents[oldPos];
+        entryComponents[oldPos] = temp;
     }
 
 
     //custom methods----------------------------------------------------------------
-    public override void Initialize(EntryBase data)
-    {
-        if(data == null)
-            throw new ArgumentNullException();
 
-        base.Initialize(data);
-        _componentsListControl = new ReorderableListControl();
-        _componentsListadapter = new EntryComponentListAdaptor<EntryComponent>(EntryData.Componets, ComponentItemDrawer, OnAddComponentClick);
-
-    }
 
 }

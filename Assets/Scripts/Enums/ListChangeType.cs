@@ -2,6 +2,7 @@
 {
     None,
     Add,
+    Duplicate,
     Remove,
     Clear,
     Set
