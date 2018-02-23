@@ -18,7 +18,7 @@ public class test : MonoBehaviour
 	{
 
 	    if (Input.GetKeyDown(KeyCode.Z))
-	        entry.GetNewWindow().ShowUtility();
+	        entry.GetVisableWindow().ShowUtility();
 	    if (Input.GetKeyDown(KeyCode.X))
 	    {
 	        entry.ShowRemoveButton= entry.ShowDraggableButton= entry.ShowAddButton = entry.ShowEditModeOption = editMode = !editMode;

@@ -16,7 +16,7 @@ public class EntryComponent_UnityObjectField : EntryComponent_SelectTypeBase
         get { return _value; }
         set
         {
-            if (OnViewModeModified != null && !_value.Equals(value))
+            if (OnViewModeModified != null &&(_value == null|| !_value.Equals(value)))
             {
                 _value = (UnityEngine.Object)value;
                 OnViewModeModified();
