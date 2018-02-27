@@ -6,7 +6,7 @@ public abstract class Window_EntryBase : EditorWindow
 {
 
     //data variables----------------------------------------------------------------
-    [SerializeField] private EntryBase entryData;
+    private EntryBase entryData;
     public EntryBase EntryData
     {
         get { return entryData; }
@@ -18,7 +18,7 @@ public abstract class Window_EntryBase : EditorWindow
 
 
     //messages----------------------------------------------------------------------
-    protected abstract void OnGUI();
+    public abstract void OnGUI();
 
     //custom methods----------------------------------------------------------------
     public virtual void Initialize(EntryBase data)

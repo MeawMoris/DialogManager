@@ -1,90 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Rotorz.ReorderableList;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-
-public class ExternalListAdapter<t> : GenericListAdaptor<t>
-{
-    public Action<IList<t>> OnAdd;
-    public Action<IList<t>,int> OnRemove;
-    public Action<IList<t>, int> OnInsert;
-    public Action<IList<t>, int> OnDuplicate;
-    public Action<IList<t>, int,int> OnMove;
-
-
-    public ReorderableListControl.ItemDrawer<t> OnItemDraw;
-    public ReorderableListControl.ItemDrawer<t> OnItemDrawBackground;
-    public Func<IList<t>, int, float> OnGetItemHeight;
-
-
-    public ExternalListAdapter(IList<t> list, ReorderableListControl.ItemDrawer<t> itemDrawer) : base(list, null, ReorderableListGUI.DefaultItemHeight)
-    {
-        OnItemDraw = itemDrawer;
-    }
-
-    public override void Add()
-    {
-        if(OnAdd != null)
-            OnAdd(List);
-        else base.Add();
-    }
-
-    public override void Remove(int index)
-    {
-        if (OnRemove != null)
-            OnRemove(List, index);
-        else base.Remove(index);
-
-    }
-
-    public override void Duplicate(int index)
-    {
-        if (OnDuplicate != null)
-            OnDuplicate(List, index);
-        else base.Duplicate(index);
-    }
-
-    public override void Insert(int index)
-    {
-        if (OnInsert != null)
-            OnInsert(List, index);
-
-        else base.Insert(index);
-
-    }
-
-    public override void Move(int sourceIndex, int destIndex)
-    {
-        if(OnMove != null)
-            OnMove(List, sourceIndex, destIndex);
-        else base.Move(sourceIndex,destIndex);
-    }
-
-    public override void DrawItem(Rect position, int index)
-    {
-        OnItemDraw(position, List[index]);
-    }
-
-    public override void DrawItemBackground(Rect position, int index)
-    {
-        if(OnItemDrawBackground != null)
-            OnItemDrawBackground(position, List[index]);
-        else base.DrawItemBackground(position,index);
-    }
-
-    public override float GetItemHeight(int index)
-    {
-        if (OnGetItemHeight != null)
-            return OnGetItemHeight(List,index);
-
-        return base.GetItemHeight(index);
-    }
-}
-
-
 
 public class ExternalReorderableListAdapter<t>
 {
@@ -96,16 +15,49 @@ public class ExternalReorderableListAdapter<t>
     private IList<t> _list;
     private int _reorderInitialIndex = 0;
     private bool showRemoveButtonNextElement ;
-    private bool highlightSelected ;
+    private bool _showContextMenu ;
     //events--------------------------------------------------------------------
-    public Action<IList<t>> CallBack_List_OnAdd;
+    public Action<IList<t>> _callBack_List_OnAdd;
+    public Action<IList<t>, BetterGenericMenu> _callBack_List_OnAddOptions;
+    public Action<IList<t>> CallBack_List_OnAdd
+    {
+        get { return _callBack_List_OnAdd; }
+        set
+        {
+            _callBack_List_OnAddOptions = null;
+            _addOptions = null;
+            _callBack_List_OnAdd = value;
+        }
+    }
+    public Action<IList<t>, BetterGenericMenu> CallBack_List_OnAddOptions
+    {
+        get { return _callBack_List_OnAddOptions; }
+        set
+        {
+            _callBack_List_OnAdd = null;
+            _callBack_List_OnAddOptions = value;
+        }
+    }
+
+    private BetterGenericMenu _addOptions;
+    public BetterGenericMenu AddOptions
+    {
+        get
+        {
+            if(_addOptions == null)
+                _addOptions = new BetterGenericMenu();
+            return _addOptions;
+        }
+    }
+
+    //events--------------------------------------------------------------------
+
     public ReorderableList.AddDropdownCallbackDelegate CallBack_List_onAddDropdownCallback;
 
     public Action<IList<t>, int> CallBack_List_OnRemove;
-    public Action<IList<t>, int> CallBack_List_OnInsert;
+    // public Action<IList<t>, int> CallBack_List_OnInsert;
     public Action<IList<t>, int> CallBack_List_OnDuplicate;
-    public Action<IList<t>, int, int> CallBack_List_OnReorder;//on move
-    //public ReorderableList.ReorderCallbackDelegate CallBack_List_Reorder;
+    //public Action<IList<t>, int, int> CallBack_List_OnReorder;//on move
 
 
     public ElementDrawCallbackDelegate Callback_Draw_Element;
@@ -130,11 +82,10 @@ public class ExternalReorderableListAdapter<t>
         get { return _listViewer.onCanAddCallback; }
         set { _listViewer.onCanAddCallback = value; }
     }
-    public ReorderableList.CanRemoveCallbackDelegate CallBack_Setting_CanRemove
-    {
-        get { return _listViewer.onCanRemoveCallback; }
-        set { _listViewer.onCanRemoveCallback = value; }
-    }
+
+    public Func<IList<t>,int,bool> CallBack_Setting_CanRemove;
+    public Func<bool> CallBack_Setting_CanShowContextMenu;
+
     public ReorderableList.SelectCallbackDelegate CallBack_Setting_OnMouseUp
     {
         get { return _listViewer.onMouseUpCallback; }
@@ -155,48 +106,45 @@ public class ExternalReorderableListAdapter<t>
 
     public ExternalReorderableListAdapter(IList<t> list)
     { 
+
+
+
         _list = list;
         _listViewer = new ReorderableList((IList)_list, typeof(t));
 
 
         Property_Show_HighlighSelected = true;
         Property_Show_RemoveButton = true;
+        _showContextMenu = true;
         _listViewer.displayRemove = false;
         Property_Height_Header = SingleLineHeight;
         Property_Height_Elemet = SingleLineHeight;
 
         //add index
         _listViewer.onAddCallback += (x) => Add();
+
         //remove index
         _listViewer.onRemoveCallback += reorderableList => Remove(reorderableList.index);
-
-        //reorder items
-        _listViewer.onSelectCallback += reorderableList =>
-        {
-            _reorderInitialIndex = reorderableList.index;
-        };
-        _listViewer.onReorderCallback += reorderableList => Move(_reorderInitialIndex,reorderableList.index);
-
-        //rightClick item
-        _listViewer.onMouseUpCallback += OnMouseUpCallback;
-
 
         //draw events
         _listViewer.drawElementCallback += DrawElementCallback;
         _listViewer.drawElementBackgroundCallback += DrawElementBackgroundCallback;
         _listViewer.elementHeightCallback += GetItemHeight;
 
-        //draw canAdd and cannRemove
-        //_listViewer.onCanAddCallback += ca;
-
     }
-
 
 
     protected void Add()
     {
-        if (CallBack_List_OnAdd != null)
-            CallBack_List_OnAdd(_list);
+        if (_callBack_List_OnAdd != null)
+            _callBack_List_OnAdd(_list);
+        else if (_callBack_List_OnAddOptions != null)
+        {
+            AddOptions.Clear();
+            _callBack_List_OnAddOptions(_list, AddOptions);
+            AddOptions.ShowAsContext();
+
+        }
     }
     protected  void Remove(int index)
     {
@@ -211,75 +159,83 @@ public class ExternalReorderableListAdapter<t>
         if (CallBack_List_OnDuplicate != null)
             CallBack_List_OnDuplicate(_list, index);
     }
-    protected void Insert(int index)
+    protected void InsertWithAdd(int index)//todo to implement here
     {
-        if (CallBack_List_OnInsert != null)
-            CallBack_List_OnInsert(_list, index);
-    }
-    protected void Move(int sourceIndex, int destIndex)
-    {
-        if (CallBack_List_OnReorder != null)
-            CallBack_List_OnReorder(_list, sourceIndex, destIndex);
+        Add();
+        _list.Insert(index, _list[_list.Count - 1]);
+        _list.RemoveAt(_list.Count - 1);
     }
 
 
-    /*
-     todo: implement draw item 
-     todo: implement draw item remove button
-     todo: implement draw item background
-     todo: implement add display remove default property
-     todo: implement add display remove next element property
-     todo: implement add drop-down event
-     todo: implement add onChanged event
-         */
+    //-------------------------------------------------------------------------
+
+
     private void DrawElementBackgroundCallback(Rect rect, int index, bool isActive, bool isFocused)
     {
-        if (index > _list.Count)
+        if (index >= _list.Count)
             return;
 
-        var elementDrawPos = (rect.position);
-        var ElementSize = (rect.size);
-        var mousePos = Event.current.mousePosition;
-        if (Event.current.button == 1)
+        //show context menu
+        if (_showContextMenu && (CallBack_Setting_CanShowContextMenu== null || CallBack_Setting_CanShowContextMenu()))
+        {
+            var elementDrawPos = (rect.position);
+            var ElementSize = (rect.size);
+            var mousePos = Event.current.mousePosition;
+            if (Event.current.button == 1 && Property_Show_AddButton && CallBack_Setting_CanAdd(_listViewer))
 
-            if (mousePos.x > elementDrawPos.x && mousePos.x < elementDrawPos.x + ElementSize.x
-                && mousePos.y > elementDrawPos.y && mousePos.y < elementDrawPos.y + ElementSize.y)
-            {
+                if (mousePos.x > elementDrawPos.x && mousePos.x < elementDrawPos.x + ElementSize.x
+                    && mousePos.y > elementDrawPos.y && mousePos.y < elementDrawPos.y + ElementSize.y)
+                {
 
-                GenericMenu options = new GenericMenu();
-                options.AddItem(new GUIContent("Insert Above"), false, () => Insert(index));
-                options.AddItem(new GUIContent("Insert Below"), false, () => Insert(index + 1));
-                options.AddSeparator("");
-                options.AddItem(new GUIContent("Duplicate"), false, () => Duplicate(index));
-                _listViewer.ReleaseKeyboardFocus();
-                //_listViewer.GrabKeyboardFocus();
+                    GenericMenu options = new GenericMenu();
 
-
-                options.ShowAsContext();
-                //  isFocused = true;
-            }
-
-        if (Callback_Draw_ElementBackground != null)
-            Callback_Draw_ElementBackground(_list,rect, index, isActive, isFocused);
+                    if (_callBack_List_OnAdd != null)
+                    {
+                        options.AddItem(new GUIContent("Insert Above"), false, () => InsertWithAdd(index));
+                        options.AddItem(new GUIContent("Insert Below"), false, () => InsertWithAdd(index + 1));
+                    }
+                    if (CallBack_List_OnDuplicate != null)
+                    {
+                        if (_callBack_List_OnAdd != null || _callBack_List_OnAddOptions != null)
+                            options.AddSeparator("");
+                        options.AddItem(new GUIContent("Duplicate"), false, () => Duplicate(index));
+                    }
 
 
-        if (isFocused && highlightSelected)
+                    _listViewer.ReleaseKeyboardFocus();
+                    //_listViewer.GrabKeyboardFocus();
+
+
+                    options.ShowAsContext();
+                    //  isFocused = true;
+                }
+
+            if (Callback_Draw_ElementBackground != null)
+                Callback_Draw_ElementBackground(_list, rect, index, isActive, isFocused);
+        }
+
+        //draw selected background
+        if (isFocused && _showContextMenu)
             DrawQuad(rect, 0, 50, 186, .3f);
     }
     private void DrawElementCallback(Rect pos, int index, bool isActive, bool isFocused)
     {
-        if(index>_list.Count)
+        if (index>=_list.Count)
             return;
 
+        //if can remove, set the field size 
         var rect = pos ;
-        var canRemove =  CallBack_Setting_CanRemove(_listViewer);
+        var canRemove = (CallBack_Setting_CanRemove==null) || CallBack_Setting_CanRemove(_list,index);
 
-        if (showRemoveButtonNextElement && canRemove)
+        if (CallBack_List_OnRemove != null && showRemoveButtonNextElement && canRemove)
             rect.width -= SingleLineHeight;
+
+        //draw the element
         if (Callback_Draw_Element != null)
             Callback_Draw_Element(_list, rect, index, isActive, isFocused);
 
-        if (showRemoveButtonNextElement && canRemove)
+        //if can remove, show remove button 
+        if (CallBack_List_OnRemove != null &&showRemoveButtonNextElement && canRemove)
         {
             //calculate remove button pos
             rect.height = rect.width = SingleLineHeight;
@@ -288,15 +244,19 @@ public class ExternalReorderableListAdapter<t>
 
             //on remove button pressed
 
-            if (GUI.Button(rect,ReorderableList.defaultBehaviours.iconToolbarMinus, ReorderableList.defaultBehaviours.preButton))
+            if (GUI.Button(rect, ReorderableList.defaultBehaviours.iconToolbarMinus,
+                ReorderableList.defaultBehaviours.preButton))
+            {
+                _listViewer.ReleaseKeyboardFocus();
                 Remove(index);
+            }
         }
 
 
     }
     protected float GetItemHeight(int index)
     {
-        if (index > _list.Count)
+        if (index >= _list.Count)
             return _listViewer.elementHeight;
 
         if (Callback_Draw_ElementHeight != null)
@@ -306,25 +266,11 @@ public class ExternalReorderableListAdapter<t>
     }
 
 
-    private void OnMouseUpCallback(ReorderableList list)
-    {
-        if (Event.current.button == 1)
-        {
-            GenericMenu options = new GenericMenu();
-            options.AddItem(new GUIContent("Insert Above"), false, ()=> Insert(list.index));
-            options.AddItem(new GUIContent("Insert Below"), false, ()=> Insert(list.index+1));
-            options.AddSeparator("");
-            options.ShowAsContext();
-        }
-
-    }
-
-
     private Texture2D _cellBackgroundTexture;
     protected void DrawQuad(Rect position, int r, int g, int b, float a = 1)
     {
         Color color = new Color(r / 255f, g / 255f, b / 255f, a);
-        if (_cellBackgroundTexture == null)
+        if(_cellBackgroundTexture == null)
             _cellBackgroundTexture = new Texture2D(1, 1);
         _cellBackgroundTexture.SetPixel(0, 0, color);
         _cellBackgroundTexture.Apply();
@@ -387,10 +333,14 @@ public class ExternalReorderableListAdapter<t>
     }
     public bool Property_Show_HighlighSelected
     {
-        get { return highlightSelected; }
-        set { highlightSelected = value; }
+        get { return _showContextMenu; }
+        set { _showContextMenu = value; }
     }
-
+    public bool Property_Show_ContextMenu
+    {
+        get { return _showContextMenu; }
+        set { _showContextMenu = value; }
+    }
 
     public int Property_Count
     {
@@ -400,6 +350,7 @@ public class ExternalReorderableListAdapter<t>
     {
         get { return _list; }
     }
+
     //-------------------------------------------------------------------------
 
     public void DoList(Rect rect)
@@ -410,5 +361,11 @@ public class ExternalReorderableListAdapter<t>
     {
         _listViewer.DoLayoutList();
     }
+
+    public void DoAdd()
+    {
+        Add();
+    }
+    //-------------------------------------------------------------------------
 
 }

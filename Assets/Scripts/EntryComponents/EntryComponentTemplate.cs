@@ -17,7 +17,7 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
             throw new ArgumentNullException();
         _templateComponent = template;
         _holder = template.Holder;
-        _templateComponent.OnEditModeModified += OnTemplateChanged;
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged;
     }
     public EntryComponentTemplate(Type componentType, Entry_Components holder)
     {
@@ -60,13 +60,13 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
 
         _templateComponent = EntryComponent.CreateInstance(componentType);
         _templateComponent.Initialize(_holder);
-        _templateComponent.OnEditModeModified += OnTemplateChanged;
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged;
 
 
     }
 
     //-----------------------------------------------------------------
-    public void OnTemplateChanged()//note: on edit changed.. component value is not taken into consideration
+    public void OnTemplateEditChanged()//note: on edit changed.. component value is not taken into consideration
     {
         //note: can clear the _observersList, cause otherwise the _observersList elements are cloned from the template
         ObserversList.ForEach(x =>

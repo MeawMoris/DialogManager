@@ -6,7 +6,7 @@ using UnityEngine;
 public class test : MonoBehaviour
 {
     private bool editMode;
-    [SerializeField] private Entry_Components entry;
+    [SerializeField] private Entry_ComponentsEntryTemplate entry;
 
 
 	void Start () {
@@ -19,11 +19,11 @@ public class test : MonoBehaviour
 
 	    if (Input.GetKeyDown(KeyCode.Z))
 	        entry.GetVisableWindow().ShowUtility();
-	    if (Input.GetKeyDown(KeyCode.X))
-	    {
-	        entry.ShowRemoveButton= entry.ShowDraggableButton= entry.ShowAddButton = entry.ShowEditModeOption = editMode = !editMode;
+	    if (Input.GetKeyDown(KeyCode.X))	    
+	        entry.AddObserver().GetNewWindow().Show();
 
-	    }
+
+        
 //	    if (Input.GetKeyDown(KeyCode.C))
 	//        entry.AddObserver().GetNewWindow().Show();
 
@@ -31,7 +31,7 @@ public class test : MonoBehaviour
 
     void initializeEntry()
     {
-        entry = ScriptableObject.CreateInstance<Entry_Components>();
+        entry = ScriptableObject.CreateInstance<Entry_ComponentsEntryTemplate>();
 
     }
 }

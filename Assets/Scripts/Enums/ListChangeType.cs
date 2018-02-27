@@ -5,5 +5,6 @@
     Duplicate,
     Remove,
     Clear,
-    Set
+    Reorder,
+    DataChanged
 }

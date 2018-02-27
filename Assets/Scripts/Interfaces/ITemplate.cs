@@ -10,5 +10,4 @@ public interface ITemplate<T>
     void RemoveObserver(int index);
     void RemoveObserver(T observer);
     void ClearObservers();
-    void OnTemplateChanged();
 }

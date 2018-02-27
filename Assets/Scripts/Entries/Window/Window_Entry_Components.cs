@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Rotorz.ReorderableList;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+
 
 public class Window_Entry_Components : Window_EntryBase
 {
@@ -19,8 +19,6 @@ public class Window_Entry_Components : Window_EntryBase
 
     //UI window variables-----------------------------------------------------------
     private ExternalReorderableListAdapter<EntryComponent> _componentsListadapter;
-    protected ReorderableListControl _componentsListControl;
-    protected GenericMenu _addComponentGenericMenu;
     protected Vector2 scrollerPos;
 
 
@@ -48,7 +46,7 @@ public class Window_Entry_Components : Window_EntryBase
             return _genericMenu;
         }
     }
-    protected ExternalReorderableListAdapter<EntryComponent> ComponentsListadapter
+    internal ExternalReorderableListAdapter<EntryComponent> ComponentsReorderableList
     {
         get
         {
@@ -57,19 +55,10 @@ public class Window_Entry_Components : Window_EntryBase
             return _componentsListadapter;
         }
     }
-    protected ReorderableListControl ComponentsListControl
-    {
-        get
-        {
-            if(_componentsListControl== null)
-                _componentsListControl = new ReorderableListControl();
 
-            return _componentsListControl;
-        }
-    }
 
     //messages----------------------------------------------------------------------
-    protected override void OnGUI()
+    public override void OnGUI()
     {
 
         if (EntryData == null )
@@ -78,76 +67,17 @@ public class Window_Entry_Components : Window_EntryBase
             EditorGUILayout.LabelField("Please initialize the window by calling the \"Initialize\" method in order to view the content.");
             return;
         }
-        if(ComponentsListControl == null || ComponentsListadapter == null)
+        if(ComponentsReorderableList == null)
             Initialize(EntryData);
         
        // DrawListHeader();
-        UpdateListMode();
         DrawList();
         this.Repaint();
-    }
-
-    protected void UpdateListMode()
-    {
-        if (EntryData.ShowEditMode)
-            ComponentsListControl.Flags = 0
-                                           & ~ReorderableListFlags.DisableContextMenu
-                                           | ReorderableListFlags.DisableDuplicateCommand
-                                           | ReorderableListFlags.DisableAutoFocus
-                                           & ~ReorderableListFlags.ShowIndices
-                                           //| ~ReorderableListFlags.DisableClipping
-                                           & ~ReorderableListFlags.DisableAutoScroll;
-
-
-        else
-            ComponentsListControl.Flags = 0
-                                           | ReorderableListFlags.DisableContextMenu
-                                           | ReorderableListFlags.DisableDuplicateCommand
-                                           | ReorderableListFlags.DisableAutoFocus
-                                           & ~ReorderableListFlags.ShowIndices
-                                           //| ~ReorderableListFlags.DisableClipping
-                                           & ~ReorderableListFlags.DisableAutoScroll;
-
-
-        if (EntryData.ShowAddButton)
-            ComponentsListControl.Flags &=  ~ReorderableListFlags.HideAddButton;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.HideAddButton;
-
-        if (EntryData.ShowRemoveButton)
-            ComponentsListControl.Flags &= ~ReorderableListFlags.HideRemoveButtons;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.HideRemoveButtons;
-
-        if (EntryData.ShowDraggableButton)
-            ComponentsListControl.Flags &= ~ReorderableListFlags.DisableReordering;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.DisableReordering;
-
-
-    }
-
-    protected void DrawListHeader()
-    {
-        EditorGUILayout.BeginHorizontal();
-        //draw component title
-        ReorderableListGUI.Title("Components");
-
-        //draw add button
-        if(EntryData.ShowAddButton)
-            if (GUILayout.Button("Add", EditorStyles.miniButtonLeft, GUILayout.Width(40), GUILayout.Height(20)))
-                OnAdd(EntryData.Componets);
-
-        //draw settings button
-        if (GUILayout.Button("Settings", EditorStyles.miniButtonRight, GUILayout.Width(60), GUILayout.Height(20)))
-            SettingsGenericMenu.ShowAsContext();
-        
-        EditorGUILayout.EndHorizontal();
     }
     protected void DrawList()
     {
         scrollerPos = EditorGUILayout.BeginScrollView(scrollerPos);
-        ComponentsListadapter.DoLayoutList();
+        ComponentsReorderableList.DoLayoutList();
         EditorGUILayout.EndScrollView();
     }
 
@@ -157,22 +87,31 @@ public class Window_Entry_Components : Window_EntryBase
     void InitializeComponentsReorderableList()
     {
         _componentsListadapter = new ExternalReorderableListAdapter<EntryComponent>(EntryData.Componets);
-        _componentsListadapter.CallBack_List_OnAdd += OnAdd;
-        _componentsListadapter.CallBack_List_OnInsert += OnInsert;
+        _componentsListadapter._callBack_List_OnAddOptions += OnAdd;
+       // _componentsListadapter.CallBack_List_OnInsert += OnInsert;
         _componentsListadapter.CallBack_List_OnRemove += OnRemove;
         _componentsListadapter.CallBack_List_OnDuplicate += OnDuplicate;
+
+
+        _componentsListadapter.CallBack_Setting_OnSelect+= OnSelect;
+        _componentsListadapter.CallBack_Setting_OnChanged+= OnReorder;
+
+
         _componentsListadapter.Callback_Draw_ElementHeight += OnGetItemHeight;
-        _componentsListadapter.CallBack_List_OnReorder+= OnMove;
         _componentsListadapter.Callback_Draw_Element+= ItemDrawer;
         _componentsListadapter.Callback_Draw_Header+= DrawHeader;
+
+
         _componentsListadapter.CallBack_Setting_CanAdd += list => EntryData.ShowAddButton;
-        _componentsListadapter.CallBack_Setting_CanRemove += list => EntryData.ShowRemoveButton;
-        //_componentsListadapter.Property_Show_Header = false;
+        _componentsListadapter.CallBack_Setting_CanRemove += (list,i) => EntryData.ShowRemoveButton;
+        _componentsListadapter.CallBack_Setting_CanShowContextMenu += () => EntryData.ShowAddButton;
+        _componentsListadapter. Property_Show_Dragable = EntryData.ShowDraggableButton;
 
     }
 
 
-    protected void DrawHeader(Rect rect)
+
+    internal void DrawHeader(Rect rect)
     {
         //set label width
         var tempPos = rect;
@@ -189,7 +128,7 @@ public class Window_Entry_Components : Window_EntryBase
         //draw add button
         if (EntryData.ShowAddButton)
             if (GUI.Button(tempPos, "Add", EditorStyles.miniButtonLeft))
-                OnAdd(EntryData.Componets);
+                ComponentsReorderableList.DoAdd();
 
         //set settings button size
         tempPos.x += tempPos.width;
@@ -201,7 +140,7 @@ public class Window_Entry_Components : Window_EntryBase
 
     }
 
-    protected virtual void ItemDrawer(IList<EntryComponent> list, Rect rect, int index, bool isActive, bool isFocused)
+    internal virtual void ItemDrawer(IList<EntryComponent> list, Rect rect, int index, bool isActive, bool isFocused)
     {
         var element = list[index];
         element.ShowFieldTypeLabel = EntryData.ShowComponentsTypeLabel;
@@ -211,317 +150,98 @@ public class Window_Entry_Components : Window_EntryBase
         element.OnViewModeModified += Repaint;
     }
 
-    protected virtual void OnAdd(IList<EntryComponent> list)
+    internal virtual void OnAdd(IList<EntryComponent> list, BetterGenericMenu betterGenericMenu)
     {
-        if (_addComponentGenericMenu == null)
+        InitializeAddButtonGenerucMenu(betterGenericMenu, type =>
         {
-            _addComponentGenericMenu = new GenericMenu();
-
-
-            //base type
-            Type abstractType = typeof(EntryComponent);
-
-            //get all sub types
-            var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
-                where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
-                      && t.GetCustomAttributes(true).Any(x => x.GetType() == typeof(SelectableComponentAttribute))
-                select t).ToList();
-
-            //set contexts menu options and OnItemSelect
-            foreach (var typee in componentTypes)
-            {
-                var componentType = typee;
-                _addComponentGenericMenu.AddItem(new GUIContent(componentType.Name.Split('_')[1]), false,
-                    () =>
-                    {
-                        var instance = EntryComponent.CreateInstance(componentType);
-                        instance.Initialize(EntryData, EntryData.GetNextAvailableName());
-                        instance.OnEditModeModified += () => { EntryData.ValidateFieldName(instance); };
-                        list.Add(instance);
-                        EntryData.OnComponentChanged(ListChangeType.Add);
-                    });
-            }
-        }
-
-        _addComponentGenericMenu.ShowAsContext();
+            list.Add(CreateNewComponent(type));
+            EntryData.OnComponentChanged(ListChangeType.Add,list.Count-1,-1);
+        });
     }
-    protected virtual void OnInsert(IList<EntryComponent> entryComponents, int i)
-    {
-        OnAdd(entryComponents);
-        entryComponents.Insert(i, entryComponents[entryComponents.Count - 1]);
-        entryComponents.RemoveAt(entryComponents.Count - 1);
-    }
-    protected virtual void OnRemove(IList<EntryComponent> entryComponents, int i)
+    internal virtual void OnRemove(IList<EntryComponent> entryComponents, int i)
     {
         entryComponents.RemoveAt(i);
-        EntryData.OnComponentChanged(ListChangeType.Remove);
+        EntryData.OnComponentChanged(ListChangeType.Remove,i,-1);
 
     }
-    protected virtual void OnDuplicate(IList<EntryComponent> entryComponents, int i)
+    internal virtual void OnDuplicate(IList<EntryComponent> entryComponents, int i)
     {
-        entryComponents.Insert(i, null);
-        entryComponents[i] = entryComponents[i + 1].Clone() as EntryComponent;
-        EntryData.OnComponentChanged(ListChangeType.Duplicate);
+        entryComponents.Insert(i+1, null);
+        entryComponents[i+1] = entryComponents[i].Clone() as EntryComponent;
+        entryComponents[i+1].FieldName = EntryData.GetNextAvailableName();
+        entryComponents[i + 1].OnEditModeModified += () =>
+        {
+            EntryData.ValidateFieldName(entryComponents[i + 1]);
+            OnDataChanged(entryComponents[i + 1]);
+        };
+
+        EntryData.OnComponentChanged(ListChangeType.Duplicate,i,-1);
 
     }
-    protected virtual float OnGetItemHeight(IList<EntryComponent> entryComponents, int i)
+    internal virtual float OnGetItemHeight(IList<EntryComponent> entryComponents, int i)
     {
         return entryComponents[i].GetPropertyHeight();
     }
-    protected virtual void OnMove(IList<EntryComponent> entryComponents, int oldPos, int newPos)
-    {
 
-        var temp = entryComponents[newPos];
-        entryComponents[newPos] = entryComponents[oldPos];
-        entryComponents[oldPos] = temp;
+    bool _itemSelected;
+    private int _reorderSelectedIndex = -1;
+    internal void OnSelect(ReorderableList reorderableList)
+    {
+        _reorderSelectedIndex = reorderableList.index;
+        _itemSelected = true;
+    }
+    internal virtual void OnReorder(ReorderableList list)
+    {
+        if (_itemSelected)
+        {
+            EntryData.OnComponentChanged(ListChangeType.Reorder, _reorderSelectedIndex, list.index);
+            _itemSelected = false;
+        }
+
     }
 
 
+    internal virtual void OnDataChanged(EntryComponent data)
+    {
+        var index = EntryData.Componets.IndexOf(data);
+        EntryData.OnComponentChanged(ListChangeType.DataChanged, index, -1);
+    }
+
+
+    internal void InitializeAddButtonGenerucMenu(BetterGenericMenu menu, Action<Type> onContextMenuItemSelected)
+    {
+
+        //base type
+        Type abstractType = typeof(EntryComponent);
+
+        //get all sub types
+        var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
+            where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
+                  && t.GetCustomAttributes(true).Any(x => x.GetType() == typeof(SelectableComponentAttribute))
+            select t).ToList();
+
+        //set contexts menu options and OnItemSelect
+        foreach (var typee in componentTypes)
+        {
+            var componentType = typee;
+            menu.AddItem(componentType.Name.Split('_')[1], false,
+                () => onContextMenuItemSelected(componentType));
+        }
+    }
+    public EntryComponent CreateNewComponent(Type componentType)
+    {
+        if(!typeof(EntryComponent).IsAssignableFrom(componentType))
+            throw  new ArgumentException("incompatible type");
+        var instance = EntryComponent.CreateInstance(componentType);
+        instance.Initialize(EntryData, EntryData.GetNextAvailableName());
+        instance.OnEditModeModified += () =>
+        {
+            EntryData.ValidateFieldName(instance);
+            OnDataChanged(instance);
+        };
+        //EntryData.OnComponentChanged(ListChangeType.Add);
+        return instance;
+    }
     //custom methods----------------------------------------------------------------
-
-
-}
-
-public class Window_Entry_Components_Copy : Window_EntryBase
-{
-
-
-    //data variables----------------------------------------------------------------
-    public new Entry_Components EntryData
-    {
-        get { return base.EntryData as Entry_Components; }
-    }
-
-    //UI window variables-----------------------------------------------------------
-    private ExternalListAdapter<EntryComponent> _componentsListadapter;
-    protected ReorderableListControl _componentsListControl;
-    protected GenericMenu _addComponentGenericMenu;
-    protected Vector2 scrollerPos;
-
-
-
-    public GenericMenu SettingsGenericMenu
-    {
-        get
-        {
-            var _genericMenu = new GenericMenu();
-
-            if (EntryData.ShowEditModeOption)
-                _genericMenu.AddItem(new GUIContent("Show Edit Mode"), EntryData.ShowEditMode,
-                    () =>
-                    {
-                        EntryData.ShowEditMode = !EntryData.ShowEditMode;
-                    });
-
-
-            _genericMenu.AddItem(new GUIContent("Show Component Types"), EntryData.ShowComponentsTypeLabel,
-                () =>
-                {
-                    EntryData.ShowComponentsTypeLabel = !EntryData.ShowComponentsTypeLabel;
-                });
-
-            return _genericMenu;
-        }
-    }
-    protected ExternalListAdapter<EntryComponent> ComponentsListadapter
-    {
-        get
-        {
-            if (_componentsListadapter == null)
-                InitializeComponentsReorderableList();
-            return _componentsListadapter;
-        }
-    }
-    protected ReorderableListControl ComponentsListControl
-    {
-        get
-        {
-            if (_componentsListControl == null)
-                _componentsListControl = new ReorderableListControl();
-
-            return _componentsListControl;
-        }
-    }
-
-    //messages----------------------------------------------------------------------
-    protected override void OnGUI()
-    {
-
-        if (EntryData == null)
-        {
-
-            EditorGUILayout.LabelField("Please initialize the window by calling the \"Initialize\" method in order to view the content.");
-            return;
-        }
-        if (ComponentsListControl == null || ComponentsListadapter == null)
-            Initialize(EntryData);
-
-        DrawListHeader();
-        UpdateListMode();
-        DrawList();
-        this.Repaint();
-    }
-
-    protected void UpdateListMode()
-    {
-        if (EntryData.ShowEditMode)
-            ComponentsListControl.Flags = 0
-                                           & ~ReorderableListFlags.DisableContextMenu
-                                           | ReorderableListFlags.DisableDuplicateCommand
-                                           | ReorderableListFlags.DisableAutoFocus
-                                           & ~ReorderableListFlags.ShowIndices
-                                           //| ~ReorderableListFlags.DisableClipping
-                                           & ~ReorderableListFlags.DisableAutoScroll;
-
-
-        else
-            ComponentsListControl.Flags = 0
-                                           | ReorderableListFlags.DisableContextMenu
-                                           | ReorderableListFlags.DisableDuplicateCommand
-                                           | ReorderableListFlags.DisableAutoFocus
-                                           & ~ReorderableListFlags.ShowIndices
-                                           //| ~ReorderableListFlags.DisableClipping
-                                           & ~ReorderableListFlags.DisableAutoScroll;
-
-
-        if (EntryData.ShowAddButton)
-            ComponentsListControl.Flags &= ~ReorderableListFlags.HideAddButton;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.HideAddButton;
-
-        if (EntryData.ShowRemoveButton)
-            ComponentsListControl.Flags &= ~ReorderableListFlags.HideRemoveButtons;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.HideRemoveButtons;
-
-        if (EntryData.ShowDraggableButton)
-            ComponentsListControl.Flags &= ~ReorderableListFlags.DisableReordering;
-        else
-            ComponentsListControl.Flags |= ReorderableListFlags.DisableReordering;
-
-
-    }
-
-    protected void DrawListHeader()
-    {
-        EditorGUILayout.BeginHorizontal();
-        //draw component title
-        ReorderableListGUI.Title("Components");
-
-        //draw add button
-        if (EntryData.ShowAddButton)
-            if (GUILayout.Button("Add", EditorStyles.miniButtonLeft, GUILayout.Width(40), GUILayout.Height(20)))
-                OnAdd(EntryData.Componets);
-
-        //draw settings button
-        if (GUILayout.Button("Settings", EditorStyles.miniButtonRight, GUILayout.Width(60), GUILayout.Height(20)))
-            SettingsGenericMenu.ShowAsContext();
-
-        EditorGUILayout.EndHorizontal();
-    }
-    protected void DrawList()
-    {
-        scrollerPos = EditorGUILayout.BeginScrollView(scrollerPos);
-        ComponentsListControl.Draw(ComponentsListadapter);
-        EditorGUILayout.EndScrollView();
-    }
-
-
-
-    //custom methods----------------------------------------------------------------
-    void InitializeComponentsReorderableList()
-    {
-        _componentsListadapter = new ExternalListAdapter<EntryComponent>(EntryData.Componets, ItemDrawer);
-        ComponentsListadapter.OnAdd += OnAdd;
-        ComponentsListadapter.OnRemove += OnRemove;
-        ComponentsListadapter.OnDuplicate += OnDuplicate;
-        ComponentsListadapter.OnInsert += OnInsert;
-        ComponentsListadapter.OnGetItemHeight += OnGetItemHeight;
-        ComponentsListadapter.OnMove += OnMove;
-
-    }
-
-
-    protected virtual EntryComponent ItemDrawer(Rect position, EntryComponent item)
-    {
-        item.ShowFieldTypeLabel = EntryData.ShowComponentsTypeLabel;
-        item.IsInEditMode = EntryData.ShowEditMode;
-        item.DrawView(ref position);
-        item.OnEditModeModified += Repaint;
-        item.OnViewModeModified += Repaint;
-
-        return item;
-    }
-
-
-    protected virtual void OnAdd(IList<EntryComponent> list)
-    {
-        if (_addComponentGenericMenu == null)
-        {
-            _addComponentGenericMenu = new GenericMenu();
-
-
-            //base type
-            Type abstractType = typeof(EntryComponent);
-
-            //get all sub types
-            var componentTypes = (from t in Assembly.GetExecutingAssembly().GetTypes()
-                                  where t.IsClass && t.IsPublic && !t.IsAbstract && abstractType.IsAssignableFrom(t)
-                                        && t.GetCustomAttributes(true).Any(x => x.GetType() == typeof(SelectableComponentAttribute))
-                                  select t).ToList();
-
-            //set contexts menu options and OnItemSelect
-            foreach (var typee in componentTypes)
-            {
-                var componentType = typee;
-                _addComponentGenericMenu.AddItem(new GUIContent(componentType.Name.Split('_')[1]), false,
-                    () =>
-                    {
-                        var instance = EntryComponent.CreateInstance(componentType);
-                        instance.Initialize(EntryData, EntryData.GetNextAvailableName());
-                        instance.OnEditModeModified += () => { EntryData.ValidateFieldName(instance); };
-                        list.Add(instance);
-                        EntryData.OnComponentChanged(ListChangeType.Add);
-                    });
-            }
-        }
-
-        _addComponentGenericMenu.ShowAsContext();
-    }
-    protected virtual void OnInsert(IList<EntryComponent> entryComponents, int i)
-    {
-        OnAdd(entryComponents);
-        entryComponents.Insert(i, entryComponents[entryComponents.Count - 1]);
-        entryComponents.RemoveAt(entryComponents.Count - 1);
-    }
-    protected virtual void OnRemove(IList<EntryComponent> entryComponents, int i)
-    {
-        entryComponents.RemoveAt(i);
-        EntryData.OnComponentChanged(ListChangeType.Remove);
-
-    }
-    protected virtual void OnDuplicate(IList<EntryComponent> entryComponents, int i)
-    {
-        entryComponents.Insert(i, null);
-        entryComponents[i] = entryComponents[i + 1].Clone() as EntryComponent;
-        EntryData.OnComponentChanged(ListChangeType.Duplicate);
-
-    }
-    protected virtual float OnGetItemHeight(IList<EntryComponent> entryComponents, int i)
-    {
-        return entryComponents[i].GetPropertyHeight();
-    }
-    protected virtual void OnMove(IList<EntryComponent> entryComponents, int oldPos, int newPos)
-    {
-        if (newPos > oldPos)
-            newPos--;
-        var temp = entryComponents[newPos];
-        entryComponents[newPos] = entryComponents[oldPos];
-        entryComponents[oldPos] = temp;
-    }
-
-
-    //custom methods----------------------------------------------------------------
-
 
 }

@@ -3,10 +3,8 @@
 using UnityEditor;
 #endif
 using System;
-using System.Collections;
 using UnityEngine;
-using System.Collections.ObjectModel;
-using Rotorz.ReorderableList;
+
 
 /*
 todo: Separate editor script from non-editor
@@ -142,6 +140,8 @@ public abstract class EntryComponent:UnityEngine.ScriptableObject,ICloneable
         other._isInitialized = _isInitialized;
         other._holder = _holder;
         other._showFieldTypeLabel = ShowFieldTypeLabel;
+
+
     }
 
 
@@ -152,7 +152,7 @@ public abstract class EntryComponent:UnityEngine.ScriptableObject,ICloneable
 #if UNITY_EDITOR
     public static float SingleLineHeight
     {
-        get { return ReorderableListGUI.DefaultItemHeight; }
+        get { return EditorGUIUtility.singleLineHeight + 5; }
     }
 
     /// <summary>
@@ -232,5 +232,7 @@ public abstract class EntryComponent:UnityEngine.ScriptableObject,ICloneable
 #endif
     //--------------------------------------------------------------------------------------------
 }
+
+
 //---------------------------------------------------------------
 //---------------------------------------------------------------
