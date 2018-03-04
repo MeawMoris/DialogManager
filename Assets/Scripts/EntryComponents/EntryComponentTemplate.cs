@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
@@ -17,7 +18,8 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
             throw new ArgumentNullException();
         _templateComponent = template;
         _holder = template.Holder;
-        _templateComponent.OnEditModeModified += OnTemplateEditChanged;
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged_UpdateObservers;
+
     }
     public EntryComponentTemplate(Type componentType, Entry_Components holder)
     {
@@ -34,8 +36,11 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
         _holder = other._holder;
         _templateComponent = (EntryComponent) other.TemplateInstance.Clone();
         //note: the observers list was not cloned as it will mess up the "components entry template"
-       // _observersList = _observersList.Select(x => x.Clone() as EntryComponent).ToList();
+        // _observersList = other.ObserversList.Select(x => x.Clone() as EntryComponent).ToList();
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged_UpdateObservers;
+        other.ObserversList.ForEach(x => x.CloneTo(AddObserver()));
     }
+ 
     public object Clone()
     {
         EntryComponentTemplate returnVal = new EntryComponentTemplate(this);
@@ -60,21 +65,36 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
 
         _templateComponent = EntryComponent.CreateInstance(componentType);
         _templateComponent.Initialize(_holder);
-        _templateComponent.OnEditModeModified += OnTemplateEditChanged;
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged_UpdateObservers;
 
+    }
+    public void SetTemplate(EntryComponent template)
+    {
+        if (template == null)
+            throw new ArgumentNullException();
+        ObserversList.Clear();
+        _templateComponent = template;
+        _holder = template.Holder;
+        _templateComponent.OnEditModeModified += OnTemplateEditChanged_UpdateObservers;
 
     }
 
     //-----------------------------------------------------------------
-    public void OnTemplateEditChanged()//note: on edit changed.. component value is not taken into consideration
+    protected void OnTemplateEditChanged_UpdateObservers() //note: on edit changed.. component value is not taken into consideration
     {
+
         //note: can clear the _observersList, cause otherwise the _observersList elements are cloned from the template
         ObserversList.ForEach(x =>
         {
             TemplateInstance.CloneTo(x);
             x.IsInEditMode = false;
         });
+        if (OnTemplateEditChanged != null)
+            OnTemplateEditChanged();
     }
+
+    public Action OnTemplateEditChanged;
+
     public void SetTemplateType(Type componentType)
     {
         InitializeTemplate(componentType);
@@ -110,6 +130,8 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
     {
         ObserversList.Clear();
     }
+
+
     //-----------------------------------------------------------------
 
 

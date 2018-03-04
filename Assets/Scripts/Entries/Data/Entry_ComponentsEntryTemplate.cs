@@ -90,12 +90,15 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
             case ListChangeType.Add:
                 ComponentTemplatesList.Add(new EntryComponentTemplate(TemplateInstance.Componets[i1]));
                 ObserversList.ForEach(x => x.Componets.Add(ComponentTemplatesList[ComponentTemplatesList.Count - 1].AddObserver()));
+                TemplateInstance.Componets[i1].OnEditModeModified += () => ApplyComponentToObservers(TemplateInstance.Componets.IndexOf(TemplateInstance.Componets[i1]));
                 break;
             //---------------------------------------------------------------------------------------------------------------------
 
             case ListChangeType.Duplicate:
                 ComponentTemplatesList.Insert(i1 + 1, new EntryComponentTemplate(TemplateInstance.Componets[i1 + 1]));
                 ObserversList.ForEach(x => x.Componets.Insert(i1 + 1, ComponentTemplatesList[i1 + 1].AddObserver()));
+                TemplateInstance.Componets[i1].OnEditModeModified += () => ApplyComponentToObservers(TemplateInstance.Componets.IndexOf(TemplateInstance.Componets[i1]));
+
                 break;
             //---------------------------------------------------------------------------------------------------------------------
 

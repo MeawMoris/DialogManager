@@ -18,7 +18,7 @@ public class test : MonoBehaviour
 	{
 
 	    if (Input.GetKeyDown(KeyCode.Z))
-	        entry.GetVisableWindow().ShowUtility();
+	        entry.GetNewWindow().ShowUtility();
 	    if (Input.GetKeyDown(KeyCode.X))	    
 	        entry.AddObserver().GetNewWindow().Show();
 

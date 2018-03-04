@@ -29,10 +29,19 @@ public class Window_Entry_ComponentsTemplate : Window_EntryBase
     }
 
 
+
+
     public override void Initialize(EntryBase data)
     {
         base.Initialize(data);
-        _componentsWindow = (Window_Entry_Components)(data as Entry_ComponentsEntryTemplate).TemplateInstance.GetNewWindow();
+        var temp = (data as Entry_ComponentsEntryTemplate);
+        _componentsWindow = (Window_Entry_Components)temp.TemplateInstance.GetNewWindow();
+        foreach (var templateInstanceComponet in temp.TemplateInstance.Componets)
+        {
+            templateInstanceComponet.OnEditModeModified += Repaint;
+            templateInstanceComponet.OnViewModeModified += Repaint;
+
+        }
         initialized = false;
     }
     private void CallbackDrawElement(IList<EntryComponent> list, Rect rect, int index, bool isActive, bool isFocused)
@@ -58,7 +67,6 @@ public class Window_Entry_ComponentsTemplate : Window_EntryBase
 
         }
         else _componentsWindow.ItemDrawer(list, rect, index, isActive, isFocused);
-        this.Repaint();
     }
 
 

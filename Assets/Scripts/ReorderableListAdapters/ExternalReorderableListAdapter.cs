@@ -9,6 +9,15 @@ public class ExternalReorderableListAdapter<t>
 {
     public delegate void ElementDrawCallbackDelegate(IList<t> list ,Rect rect, int index, bool isActive, bool isFocused);
     protected const float SingleLineHeight = 20;
+    private static ReorderableList.Defaults _defaults;
+    public static ReorderableList.Defaults Defaults
+    {
+        get
+        {
+            _defaults = new ReorderableList.Defaults(); //in order to draw header
+            return _defaults;
+        }
+    }
 
     //--------------------------------------------------------------------------
     private ReorderableList _listViewer;
@@ -16,9 +25,11 @@ public class ExternalReorderableListAdapter<t>
     private int _reorderInitialIndex = 0;
     private bool showRemoveButtonNextElement ;
     private bool _showContextMenu ;
+
+
     //events--------------------------------------------------------------------
-    public Action<IList<t>> _callBack_List_OnAdd;
-    public Action<IList<t>, BetterGenericMenu> _callBack_List_OnAddOptions;
+    private Action<IList<t>> _callBack_List_OnAdd;
+    private Action<IList<t>, BetterGenericMenu> _callBack_List_OnAddOptions;
     public Action<IList<t>> CallBack_List_OnAdd
     {
         get { return _callBack_List_OnAdd; }
@@ -79,7 +90,7 @@ public class ExternalReorderableListAdapter<t>
 
     public ReorderableList.CanAddCallbackDelegate CallBack_Setting_CanAdd
     {
-        get { return _listViewer.onCanAddCallback; }
+        get { return _listViewer.onCanAddCallback?? (list =>true) ; }
         set { _listViewer.onCanAddCallback = value; }
     }
 
@@ -295,6 +306,12 @@ public class ExternalReorderableListAdapter<t>
         get { return _listViewer.headerHeight; }
         set { _listViewer.headerHeight = value; }
     }
+    public float Property_Height_ListHeight
+    {
+        get { return _listViewer.GetHeight(); }
+    }
+
+
 
     public bool Property_Show_AddButton
     {
@@ -362,6 +379,16 @@ public class ExternalReorderableListAdapter<t>
         _listViewer.DoLayoutList();
     }
 
+    public void DoHeader(Rect rect)
+    {
+        GUI.Box(rect, GUIContent.none, Defaults.headerBackground);
+        rect.x += ReorderableList.Defaults.padding;
+        rect.width -= ReorderableList.Defaults.padding*2;
+
+        if (Callback_Draw_Header!= null)
+            Callback_Draw_Header(rect);
+        
+    }
     public void DoAdd()
     {
         Add();

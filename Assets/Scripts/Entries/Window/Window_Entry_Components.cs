@@ -69,11 +69,31 @@ public class Window_Entry_Components : Window_EntryBase
         }
         if(ComponentsReorderableList == null)
             Initialize(EntryData);
-        
-       // DrawListHeader();
+
+        // var rect = this.position;
+        DoHeader();
         DrawList();
-        this.Repaint();
+
     }
+
+    private Rect headerRect;
+    protected void DoHeader()
+    {
+        var height = EntryComponent.SingleLineHeight;
+        var width = GUILayoutUtility.GetRect(minSize.x, maxSize.x, height, height).width;
+        if (Math.Abs(width - 1) > 0.1f)
+        {
+            headerRect.width = width;
+            headerRect.height = height;
+            headerRect.position = Vector2.zero;
+        }
+        
+        GUILayout.BeginArea(headerRect);
+        ComponentsReorderableList.DoHeader(headerRect);
+        GUILayout.EndArea();
+
+    }
+
     protected void DrawList()
     {
         scrollerPos = EditorGUILayout.BeginScrollView(scrollerPos);
@@ -87,7 +107,7 @@ public class Window_Entry_Components : Window_EntryBase
     void InitializeComponentsReorderableList()
     {
         _componentsListadapter = new ExternalReorderableListAdapter<EntryComponent>(EntryData.Componets);
-        _componentsListadapter._callBack_List_OnAddOptions += OnAdd;
+        _componentsListadapter.CallBack_List_OnAddOptions += OnAdd;
        // _componentsListadapter.CallBack_List_OnInsert += OnInsert;
         _componentsListadapter.CallBack_List_OnRemove += OnRemove;
         _componentsListadapter.CallBack_List_OnDuplicate += OnDuplicate;
@@ -107,6 +127,8 @@ public class Window_Entry_Components : Window_EntryBase
         _componentsListadapter.CallBack_Setting_CanShowContextMenu += () => EntryData.ShowAddButton;
         _componentsListadapter. Property_Show_Dragable = EntryData.ShowDraggableButton;
 
+
+        _componentsListadapter.Property_Show_Header = false;
     }
 
 

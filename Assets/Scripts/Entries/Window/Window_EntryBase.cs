@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,6 +20,15 @@ public abstract class Window_EntryBase : EditorWindow
 
     //messages----------------------------------------------------------------------
     public abstract void OnGUI();
+
+    public virtual void OnInspectorUpdate()
+    {
+
+        Repaint();
+        
+    }
+
+
 
     //custom methods----------------------------------------------------------------
     public virtual void Initialize(EntryBase data)
