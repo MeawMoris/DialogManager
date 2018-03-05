@@ -12,7 +12,7 @@ public class Window_Entry_ComponentsTemplate : Window_EntryBase
 
     public override void OnGUI()
     {
-        if (EntryData == null || _componentsWindow == null)
+        if (EntryData == null)
         {
             EditorGUILayout.LabelField(
                 "Please initialize the window by calling the \"Initialize\" method in order to view the content.");
@@ -21,8 +21,10 @@ public class Window_Entry_ComponentsTemplate : Window_EntryBase
         if (!initialized)
         {
             initialized = true;
-            _componentsWindow.ComponentsReorderableList.Callback_Draw_Element = CallbackDrawElement;
+
+            Initialize(EntryData);
         }
+        
         if (_componentsWindow != null)
             _componentsWindow.OnGUI();
 
@@ -36,13 +38,14 @@ public class Window_Entry_ComponentsTemplate : Window_EntryBase
         base.Initialize(data);
         var temp = (data as Entry_ComponentsEntryTemplate);
         _componentsWindow = (Window_Entry_Components)temp.TemplateInstance.GetNewWindow();
+        _componentsWindow.Initialize(temp.TemplateInstance);
+        _componentsWindow.ComponentsReorderableList.Callback_Draw_Element = CallbackDrawElement;
         foreach (var templateInstanceComponet in temp.TemplateInstance.Componets)
         {
             templateInstanceComponet.OnEditModeModified += Repaint;
             templateInstanceComponet.OnViewModeModified += Repaint;
 
         }
-        initialized = false;
     }
     private void CallbackDrawElement(IList<EntryComponent> list, Rect rect, int index, bool isActive, bool isFocused)
     {

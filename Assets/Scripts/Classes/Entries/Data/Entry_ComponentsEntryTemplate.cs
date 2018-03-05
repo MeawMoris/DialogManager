@@ -4,18 +4,21 @@ using UnityEditor;
 using UnityEngine;
 
 [Serializable]
+
 public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Components>
 {
+
+    //fields---------------------------------------------------------------------------------------------
     [SerializeField] private Entry_Components _templateInstance;
     [SerializeField] private List<EntryComponentTemplate> _componentTemplatesList;
     [SerializeField] private List<Entry_Components> _observers;
 
-    //fields---------------------------------------------------------------------------------------------
 
 
     //constructors---------------------------------------------------------------------------------------
 
     //properties-----------------------------------------------------------------------------------------
+
 
     //methods--------------------------------------------------------------------------------------------    
     public Entry_Components TemplateInstance
@@ -24,7 +27,9 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
         {
             if (_templateInstance == null)
             {
-                _templateInstance = EntryBase.CreateInstance<Entry_Components>();
+
+                //todo
+                _templateInstance =CreateInstance<Entry_Components>();
                 _templateInstance.AddListener_OnComponentChanged(OnComponentChanged);
                 _templateInstance.ShowAddButton = _templateInstance.ShowRemoveButton
                     = _templateInstance.ShowDraggableButton = _templateInstance.ShowEditModeOption = true;
@@ -47,28 +52,52 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
     }
 
 
-
-
-    public Entry_Components AddObserver()
-    {
-        Entry_Components componentEntry = EntryBase.CreateInstance<Entry_Components>();
+     public Entry_Components AddObserver()
+   {
+       //todo
+       Entry_Components componentEntry = ScriptableObject.CreateInstance<Entry_Components>();
+       AssetsPath.CreateAsset(componentEntry, AssetsPath.AssetName_TemplateEntryObserver);
 
         //add observer components
-        ComponentTemplatesList.ForEach(x=>componentEntry.Componets.Add(x.AddObserver()));
+        ComponentTemplatesList.ForEach(x => componentEntry.Componets.Add(x.AddObserver()));
 
-        //set observer settings
-        componentEntry.ShowAddButton = componentEntry.ShowRemoveButton
-            = componentEntry.ShowDraggableButton = componentEntry.ShowEditModeOption = false;
+       //set observer settings
+       componentEntry.ShowAddButton = componentEntry.ShowRemoveButton
+           = componentEntry.ShowDraggableButton = componentEntry.ShowEditModeOption = false;
 
-        //add observer to list
-        ObserversList.Add(componentEntry);
+       //add observer to list
+       ObserversList.Add(componentEntry);
 
 
-        return componentEntry;
-    }
+       return componentEntry;
+   }
+
+    /* public Entry_Components AddObserver()
+     {
+         //todo
+         Entry_Components componentEntry = CreateInstance<Entry_Components>();
+
+         //add observer components
+         ComponentTemplatesList.ForEach(x => componentEntry.Componets.Add(x.AddObserver()));
+
+         //set observer settings
+         componentEntry.ShowAddButton = componentEntry.ShowRemoveButton
+             = componentEntry.ShowDraggableButton = componentEntry.ShowEditModeOption = false;
+
+         //add observer to list
+         ObserversList.Add(componentEntry);
+
+
+         return componentEntry;
+     }*/
     public void RemoveObserver(int index)
     {
-        ScriptableObject.Destroy(ObserversList[index]);
+        //remove all components
+        for (var i = 0; i < ObserversList[index].Componets.Count; i++)
+            ComponentTemplatesList[i].RemoveObserver(ObserversList[index].Componets[i]);
+
+        
+        AssetsPath.DestroyAsset(ObserversList[index]);
         ObserversList.RemoveAt(index);
     }
     public void RemoveObserver(Entry_Components observer)
@@ -78,6 +107,8 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
     }
     public void ClearObservers()
     {
+        ComponentTemplatesList.ForEach(x=>x.ClearObservers());
+        ObserversList.ForEach(AssetsPath.DestroyAsset);
         ObserversList.Clear();
     }
 
@@ -91,6 +122,7 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
                 ComponentTemplatesList.Add(new EntryComponentTemplate(TemplateInstance.Componets[i1]));
                 ObserversList.ForEach(x => x.Componets.Add(ComponentTemplatesList[ComponentTemplatesList.Count - 1].AddObserver()));
                 TemplateInstance.Componets[i1].OnEditModeModified += () => ApplyComponentToObservers(TemplateInstance.Componets.IndexOf(TemplateInstance.Componets[i1]));
+
                 break;
             //---------------------------------------------------------------------------------------------------------------------
 
@@ -103,23 +135,32 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
             //---------------------------------------------------------------------------------------------------------------------
 
             case ListChangeType.Remove:
-                ComponentTemplatesList.RemoveAt(i1);
 
 
                 if (ComponentTemplatesList.Count == 0)
                     goto case ListChangeType.Clear;
 
+                ComponentTemplatesList[i1].ClearObservers();
 
-                //remove component from observers
-                ObserversList.ForEach(x => x.Componets.RemoveAt(i1));
+                //remove component from entry observers
+                ObserversList.ForEach(x => {x.Componets.RemoveAt(i1);});
+
+                //remove component from template
+                ComponentTemplatesList.RemoveAt(i1);
+
 
                 break;
 
             //---------------------------------------------------------------------------------------------------------------------
 
             case ListChangeType.Clear:
+
+                foreach (var entryComponent in ComponentTemplatesList)              
+                    entryComponent.ClearObservers();               
                 ComponentTemplatesList.Clear();
-                ObserversList.ForEach(x => x.Componets.Clear());
+
+
+                ObserversList.ForEach(x =>{ x.Componets.Clear();});
 
                 break;
 
@@ -148,10 +189,6 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
 
         }
 
-
-
-
-
     }
 
     public void ApplyComponentToObservers(int valueIndex)
@@ -171,11 +208,21 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
         window.Initialize(this);
         return window;
     }
-    public override EditorWindow GetVisableWindow()
+    public override EditorWindow GetVisibleWindow()
     {
         var window = (Window_Entry_ComponentsTemplate)EditorWindow.GetWindow(typeof(Window_Entry_ComponentsTemplate));
         window.Initialize(this);
         return window;
     }
+
+
+    protected override void OnCreateInstance()
+    {
+        AssetsPath.CreateAsset(this, AssetsPath.AssetName_TemplateEntries);
+
+    }
+
+
+
 
 }

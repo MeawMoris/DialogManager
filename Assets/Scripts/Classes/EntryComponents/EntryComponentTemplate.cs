@@ -113,21 +113,28 @@ public class EntryComponentTemplate : ICloneable, ITemplate<EntryComponent>
 
     public EntryComponent AddObserver()
     {
+        //var instance = (EntryComponent)TemplateInstance.Clone();
+        //ObserversList.Add(instance);
+        //return instance;
         var instance = (EntryComponent)TemplateInstance.Clone();
+        AssetsPath.CreateAsset(instance, AssetsPath.AssetName_ComponentsObservers);
         ObserversList.Add(instance);
-
         return instance;
+
     }
     public void RemoveObserver(int index)
     {
+        AssetsPath.DestroyAsset(ObserversList[index]);
         ObserversList.RemoveAt(index);
     }
     public void RemoveObserver(EntryComponent other)
     {
+        AssetsPath.DestroyAsset(other);
         ObserversList.Remove(other);
     }
     public void ClearObservers()
     {
+        ObserversList.ForEach(AssetsPath.DestroyAsset);
         ObserversList.Clear();
     }
 

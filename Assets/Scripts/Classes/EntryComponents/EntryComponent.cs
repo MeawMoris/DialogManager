@@ -19,6 +19,7 @@ todo?: layers and tags components
 
 */
 //---------------------------------------------------------------
+
 [Serializable]
 public abstract class EntryComponent:UnityEngine.ScriptableObject,ICloneable
 {
@@ -33,6 +34,7 @@ public abstract class EntryComponent:UnityEngine.ScriptableObject,ICloneable
             return null;
 
         var value = (EntryComponent)ScriptableObject.CreateInstance(t);
+        AssetsPath.CreateAsset(value,AssetsPath.AssetName_Components);
         value.Initialize();
         return value;
     }

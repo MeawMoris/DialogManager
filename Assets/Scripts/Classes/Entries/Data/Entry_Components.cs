@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public class Entry_Components : EntryBase
@@ -129,11 +130,17 @@ public class Entry_Components : EntryBase
         window.Initialize(this);
         return window; 
     }
-    public override EditorWindow GetVisableWindow()
+    public override EditorWindow GetVisibleWindow()
     {
         var window = (Window_Entry_Components)EditorWindow.GetWindow(typeof(Window_Entry_Components));
         window.Initialize(this);
         return window; 
+    }
+
+    protected override void OnCreateInstance()
+    {
+        AssetsPath.CreateAsset(this, AssetsPath.AssetName_Entries);
+
     }
 
     //---------------------------------------------------------------------------------------------------

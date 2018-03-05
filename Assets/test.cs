@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -10,7 +11,6 @@ public class test : MonoBehaviour
 
 
 	void Start () {
-	    initializeEntry();
     }
 	
 	// Update is called once per frame
@@ -18,20 +18,33 @@ public class test : MonoBehaviour
 	{
 
 	    if (Input.GetKeyDown(KeyCode.Z))
-	        entry.GetNewWindow().ShowUtility();
+	    {
+	        initializeEntry();
+            entry.GetNewWindow().ShowUtility();
+	    }
 	    if (Input.GetKeyDown(KeyCode.X))	    
 	        entry.AddObserver().GetNewWindow().Show();
 
+	    if (Input.GetKeyDown(KeyCode.A))
+	    {
+	        entry= AssetDatabase.LoadAssetAtPath<Entry_ComponentsEntryTemplate>("Assets/saveTemp.asset");
+	        entry.GetNewWindow().ShowUtility();
+            // EditorUtility.FocusProjectWindow();
+            // Selection.activeObject = entry;
 
-        
-//	    if (Input.GetKeyDown(KeyCode.C))
-	//        entry.AddObserver().GetNewWindow().Show();
 
-	}
+        }
+
+
+
+    }
+
+    private int i = 0;
+    private UnityEngine.Object temp;
 
     void initializeEntry()
     {
-        entry = ScriptableObject.CreateInstance<Entry_ComponentsEntryTemplate>();
+        entry = EntryBase.CreateInstance<Entry_ComponentsEntryTemplate>();
 
     }
 }

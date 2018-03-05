@@ -50,7 +50,7 @@ public class Window_Entry_Components : Window_EntryBase
     {
         get
         {
-            if(_componentsListadapter == null)
+            if(_componentsListadapter == null && EntryData!= null)
                 InitializeComponentsReorderableList();
             return _componentsListadapter;
         }
@@ -144,7 +144,6 @@ public class Window_Entry_Components : Window_EntryBase
 
         //set add button size
         tempPos.x += tempPos.width;
-        tempPos.height = 20;
         tempPos.width = 40;
 
         //draw add button
@@ -182,6 +181,8 @@ public class Window_Entry_Components : Window_EntryBase
     }
     internal virtual void OnRemove(IList<EntryComponent> entryComponents, int i)
     {
+
+        AssetsPath.DestroyAsset(entryComponents[i]);
         entryComponents.RemoveAt(i);
         EntryData.OnComponentChanged(ListChangeType.Remove,i,-1);
 
