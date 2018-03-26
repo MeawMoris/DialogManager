@@ -170,7 +170,7 @@ public class ExternalReorderableListAdapter<t>
         if (CallBack_List_OnDuplicate != null)
             CallBack_List_OnDuplicate(_list, index);
     }
-    protected void InsertWithAdd(int index)//todo to implement here
+    protected void InsertWithAdd(int index)
     {
         Add();
         _list.Insert(index, _list[_list.Count - 1]);

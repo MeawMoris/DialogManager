@@ -7,7 +7,6 @@ using UnityEngine;
 
 
 /*
-todo: Separate editor script from non-editor
 todo: create dialogEntry component
 todo: add the option to create a custom data group from components, and create a EntryComponent_GroupInstance component for it
 todo: manifest all components

@@ -112,18 +112,24 @@ export/import the data to an asset.
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -154,6 +160,8 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="1" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -164,6 +172,8 @@ export/import the data to an asset.
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -178,14 +188,14 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>ConversationBase</Name>
         <Access>Public</Access>
-        <Location left="2174" top="415" />
+        <Location left="2490" top="368" />
         <Size width="162" height="106" />
         <Collapsed>False</Collapsed>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>the type of conversation that is needed (such as: main dialog, items info, quest, etc...)</Text>
-        <Location left="2426" top="415" />
+        <Location left="2742" top="368" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
@@ -314,9 +324,9 @@ export/import the data to an asset.
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>CatagoryBase</Name>
+        <Name>CategoryBase</Name>
         <Access>Public</Access>
-        <Location left="2092" top="563" />
+        <Location left="1647" top="582" />
         <Size width="263" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -324,7 +334,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>SequenceConversation</Name>
         <Access>Public</Access>
-        <Location left="1901" top="666" />
+        <Location left="2664" top="523" />
         <Size width="162" height="112" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -332,7 +342,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>Entry_ComponentsEntryTemplate</Name>
         <Access>Public</Access>
-        <Location left="1749" top="1344" />
+        <Location left="1893" top="1358" />
         <Size width="232" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -348,7 +358,7 @@ export/import the data to an asset.
       <Entity type="Class">
         <Name>Entry_ComponentsGroupTemplate</Name>
         <Access>Public</Access>
-        <Location left="1749" top="1482" />
+        <Location left="1893" top="1494" />
         <Size width="232" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -385,6 +395,30 @@ export/import the data to an asset.
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
+      <Entity type="Class">
+        <Name>Category_Entries</Name>
+        <Access>Public</Access>
+        <Location left="1590" top="706" />
+        <Size width="162" height="100" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Category_Templates</Name>
+        <Access>Public</Access>
+        <Location left="1774" top="706" />
+        <Size width="162" height="100" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>NewClass</Name>
+        <Access>Public</Access>
+        <Location left="1971" top="706" />
+        <Size width="162" height="100" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="1" second="0">
@@ -392,6 +426,8 @@ export/import the data to an asset.
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -447,10 +483,6 @@ export/import the data to an asset.
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="19" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
       <Relationship type="Generalization" first="20" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -474,6 +506,14 @@ export/import the data to an asset.
       <Relationship type="Generalization" first="25" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="19" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2009</X>
+          <Y>1134</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

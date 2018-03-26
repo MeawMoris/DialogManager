@@ -27,8 +27,6 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
         {
             if (_templateInstance == null)
             {
-
-                //todo
                 _templateInstance =CreateInstance<Entry_Components>();
                 _templateInstance.AddListener_OnComponentChanged(OnComponentChanged);
                 _templateInstance.ShowAddButton = _templateInstance.ShowRemoveButton
@@ -54,7 +52,6 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
 
      public Entry_Components AddObserver()
    {
-       //todo
        Entry_Components componentEntry = ScriptableObject.CreateInstance<Entry_Components>();
        AssetsPath.CreateAsset(componentEntry, AssetsPath.AssetName_TemplateEntryObserver);
 
@@ -70,26 +67,7 @@ public class Entry_ComponentsEntryTemplate : EntryBase,ITemplate<Entry_Component
 
 
        return componentEntry;
-   }
-
-    /* public Entry_Components AddObserver()
-     {
-         //todo
-         Entry_Components componentEntry = CreateInstance<Entry_Components>();
-
-         //add observer components
-         ComponentTemplatesList.ForEach(x => componentEntry.Componets.Add(x.AddObserver()));
-
-         //set observer settings
-         componentEntry.ShowAddButton = componentEntry.ShowRemoveButton
-             = componentEntry.ShowDraggableButton = componentEntry.ShowEditModeOption = false;
-
-         //add observer to list
-         ObserversList.Add(componentEntry);
-
-
-         return componentEntry;
-     }*/
+   }   
     public void RemoveObserver(int index)
     {
         //remove all components
